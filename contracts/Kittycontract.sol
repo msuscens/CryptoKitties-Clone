@@ -3,50 +3,51 @@ pragma solidity 0.5.12;
 import "./IERC721.sol";
 import "./Safemath.sol";
 
-contract Kittycontract is IERC721 {
+contract KittyContract is IERC721 {
 
     using SafeMath for uint256;
 
-    uint256 private _totalSupply;
-    string private _tokenName;
-    string private _tokenSymbol;
+    string private _name;
+    string private _symbol;
 
-    mapping (address => uint256) private _ownersTokenCount;
+    mapping (address => uint256) private _ownersKittyCount;
 
-    //Strut below is not used yet but should struct (and array) be private? If so, how?
-    struct KittyToken {
-         // Add unique token attributes here
-         uint256 dna;
+    struct Kitty {
+        uint256 genes;
+        uint256 bithTime;
+        uint256 mumId;
+        uint256 dadId;
+        uint256 generation;
     }
-    KittyToken[] kitties;  
+    Kitty[] private _kitties;  
 
     mapping (uint256 => address) private _kittyOwners;
 
 
-    constructor (string memory name, string memory symbol, uint256 supply) public {
-        _tokenName = name;
-        _tokenSymbol = symbol;
-        _totalSupply = supply;
+    constructor (string memory name, string memory symbol) public {
+        _name = name;
+        _symbol = symbol;
     }
 
+
     function balanceOf(address owner) external view returns (uint256 balance){
-        return _ownersTokenCount[owner];
+        return _ownersKittyCount[owner];
     }
 
     function totalSupply() external view returns (uint256 total){
-        return _totalSupply;
+        return _kitties.length;
     }
 
     function name() external view returns (string memory tokenName){
-        return _tokenName;
+        return _name;
     }
 
     function symbol() external view returns (string memory tokenSymbol){
-        return _tokenSymbol;
+        return _symbol;
     }
 
     function ownerOf(uint256 tokenId) external view returns (address owner){
-        require(tokenId < kitties.length, "tokenId does not exist!");
+        require(tokenId < _kitties.length, "tokenId does not exist!");
         return _kittyOwners[tokenId];
     }
 
@@ -54,23 +55,49 @@ contract Kittycontract is IERC721 {
         // Checks
         require(to != address(0), "Recipient's address is zero");
         require(to != address(this), "Recipient's address is the contract address");
-        require(_kittyOwners[tokenId] == msg.sender, "Sender is not the owner of this token");
+        // require(_kittyOwners[tokenId] == msg.sender, "Sender is not the owner of this token");
+        require(_isOwner(msg.sender, tokenId), "Sender is not the owner of this token");
 
-        uint256 sendersInitialTokens = _ownersTokenCount[msg.sender];
-        uint256 receiversInitialTokens = _ownersTokenCount[to];
-        require(sendersInitialTokens > 0, "Internal error - Sender's token count before transfer is zero or less!");
-        require(receiversInitialTokens >= 0, "Internal error - Receiver's token count before transfer is negative!");
+        // uint256 sendersInitialTokens = _ownersKittyCount[msg.sender];
+        // uint256 receiversInitialTokens = _ownersKittyCount[to];
+        // require(sendersInitialTokens > 0, "Internal error - Sender's token count before transfer is zero or less!");
+        // require(receiversInitialTokens >= 0, "Internal error - Receiver's token count before transfer is negative!");
 
         // Effects - Transfer token
-        _ownersTokenCount[msg.sender] = _ownersTokenCount[msg.sender].sub(1);
-        _ownersTokenCount[to] = _ownersTokenCount[to].add(1);
+        _transfer(msg.sender, to, tokenId);
+        // _ownersKittyCount[msg.sender] = _ownersKittyCount[msg.sender].sub(1);
+        // _ownersKittyCount[to] = _ownersKittyCount[to].add(1);
+        // _kittyOwners[tokenId] = to;
+
+        // assert(_kittyOwners[tokenId] != msg.sender);
+        // assert(sendersInitialTokens > _ownersKittyCount[msg.sender]);
+        // assert(receiversInitialTokens < _ownersKittyCount[to]);
+
+        // emit Transfer(msg.sender, to, tokenId);
+    }
+
+    function _transfer(address from, address to, uint256 tokenId) internal{
+
+        uint256 sendersInitialTokens = _ownersKittyCount[from];
+        uint256 receiversInitialTokens = _ownersKittyCount[to];
+        require(receiversInitialTokens >= 0, "Internal error - Receiver's token count before transfer is negative!");
+
+        if (from != address(0)){
+            require(sendersInitialTokens > 0, "Internal error - Sender's token count before transfer is zero or less!");
+            _ownersKittyCount[from] = _ownersKittyCount[from].sub(1);
+        }
+        _ownersKittyCount[to] = _ownersKittyCount[to].add(1);
         _kittyOwners[tokenId] = to;
 
-        assert(_kittyOwners[tokenId] != msg.sender);
-        assert(sendersInitialTokens > _ownersTokenCount[msg.sender]);
-        assert(receiversInitialTokens < _ownersTokenCount[to]);
+        assert(_kittyOwners[tokenId] != from);
+        if (from != address(0)) assert(sendersInitialTokens > _ownersKittyCount[from]);
+        assert(receiversInitialTokens < _ownersKittyCount[to]);
 
-        emit Transfer(msg.sender, to, tokenId);
+        emit Transfer(from, to, tokenId);
+    }
+
+    function _isOwner(address claimer, uint256 tokenId) internal view returns (bool owner){
+        return (_kittyOwners[tokenId] == claimer);
     }
 
 }
