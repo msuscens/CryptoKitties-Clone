@@ -9,11 +9,11 @@ contract KittyContract is IERC721, Ownable{
 
     using SafeMath for uint256;
 
+    uint64 private constant _GEN0_CREATION_LIMIT = 10;
+
+    uint256 private _gen0KittiesCount;
     string private _name;
     string private _symbol;
-    uint64 private _GEN0_CREATION_LIMIT;
-
-    uint256 private _gen0KittieCount;
 
     event Birth(address owner, uint256 kittenId, uint256 mumId, uint256 dadId, uint256 genes);
 
@@ -33,13 +33,11 @@ contract KittyContract is IERC721, Ownable{
     constructor (string memory name, string memory symbol) public {
         _name = name;
         _symbol = symbol;
-        _GEN0_CREATION_LIMIT = 10;
-        _gen0KittieCount = 0;
     }
 
     function createKittyGen0(uint256 genes) public onlyOwner {
-        require(_gen0KittieCount<_GEN0_CREATION_LIMIT, "Hit Gen0 creation limit!");
-        _gen0KittieCount = _gen0KittieCount.add(1);
+        require(_gen0KittiesCount<_GEN0_CREATION_LIMIT, "Hit Gen0 creation limit!");
+        _gen0KittiesCount = _gen0KittiesCount.add(1);
         _createKitty( 0, 0, 0, genes, msg.sender);
     }
 
@@ -61,6 +59,15 @@ contract KittyContract is IERC721, Ownable{
 
         return newKittenId;
     }
+
+    function getKitty(uint256 kittyId) external view returns(uint256 genes, uint64 birthTime, 
+                                                        uint64 mumId, uint64 dadId, uint64 generation){
+        require(kittyId < _kitties.length, "No such kitty id");
+        
+        return (_kitties[kittyId].genes, _kitties[kittyId].birthTime,
+                  _kitties[kittyId].mumId, _kitties[kittyId].dadId, _kitties[kittyId].generation);
+    }
+
 
     // IERC721 function implementations
 
