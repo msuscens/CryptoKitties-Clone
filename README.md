@@ -1,3 +1,5 @@
+Week 8 : Day2 - Adding web3 code
+
 Assignment Week 8: Day 1 - Create new Kitty (Building upon previous assignments - see below)
 1. Write a public createKittyGen0(uint256 _genes) function, that employs a private _createkitty function.
 2. Ensure that createKittyGen0() can only be called by the contract owner.
