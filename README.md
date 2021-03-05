@@ -1,4 +1,8 @@
-Week 8 : Day2 - Adding web3.js to allow website connection to blockchain via MetaMask
+Assignment Week 8 : Day2
+1. Add in web3.js to allow website connection to blockchain via MetaMask (test account with test ETH)
+2. Link-up UI's Create Kittie button to send the transaction (to create a kitty on the blockchain).
+
+
 
 Assignment Week 8: Day 1 - Create new Kitty (Building upon previous assignments - see below)
 1. Write a public createKittyGen0(uint256 _genes) function, that employs a private _createkitty function.
