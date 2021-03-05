@@ -1,4 +1,4 @@
-const web3 = new web3(Web3.givenProvider);
+const web3 = new Web3(Web3.givenProvider);
 let instance;
 let user;
 let contractAddress = "0xEc31E571Ce0721b71976e1D4696b7BA5C3F051B5"
