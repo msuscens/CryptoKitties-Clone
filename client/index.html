@@ -7,7 +7,10 @@
   <link rel="stylesheet" href="assets/bootstrap/css/bootstrap.min.css">
   <script src="assets/bootstrap/js/popper.js"></script>
   <script src="assets/bootstrap/js/bootstrap.min.js"></script>
+
+  <!-- <script src="https://cdn.jsdelivr.net/npm/web3@1.3.4/dist/web3.min.js"></script> -->
   <script src="assets/js/web3.min.js"></script>
+
   <script src="./abi.js"></script>
 
   <link rel="stylesheet" href="assets/css/mystyle.css">
@@ -143,11 +146,11 @@
                             <div id="cattributes" class="m-3">
                                 <div class="form-group">
                                     <label for="formControlRange"><b>Eye shape</b><span class="badge badge-dark ml-2" id="eyeName"></span></label>
-                                    <input type="range" min="1" max="10" class="form-control-range" id="eyeshape">
+                                    <input type="range" min="0" max="9" class="form-control-range" id="eyeshape">
                                 </div>
                                 <div class="form-group">
                                     <label for="formControlRange"><b>Decorative head pattern</b><span class="badge badge-dark ml-2" id="decorationName"></span></label>
-                                    <input type="range" min="1" max="10" class="form-control-range" id="decorativepattern">
+                                    <input type="range" min="0" max="9" class="form-control-range" id="decorativepattern">
                                 </div>
                                 <div class="form-group">
                                     <div class="row">
@@ -163,7 +166,7 @@
                                 </div>
                                 <div class="form-group">
                                     <label for="formControlRange"><b>Annimation</b><span class="badge badge-dark ml-2" id="animationName"></span></label>
-                                    <input type="range" min="1" max="10" class="form-control-range" id="animation">
+                                    <input type="range" min="0" max="9" class="form-control-range" id="animation">
                                 </div>
                             </div>
                         </div>
@@ -181,6 +184,8 @@
             <div class="col-sm-6 m-2" align="right">
                 <button type="button" class="btn btn-success" onclick="createKittie()">Create Kittie</button>
             </div>
+            <br>
+            <div id="kittyCreation" class="alert alert-sucess" role="alert" style="display:none"></div>
         </div>
 
     </div>

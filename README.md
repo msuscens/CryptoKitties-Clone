@@ -1,6 +1,8 @@
 Assignment Week 8 : Day2
 1. Add in web3.js to allow website connection to blockchain via MetaMask (test account with test ETH)
-2. Link-up UI's Create Kittie button to send the transaction (to create a kitty on the blockchain).
+2. Link-up UI's Create Kittie button to send the transaction (to create a kitty on the blockchain)
+3. Set an event listener for the kittie's Birth event, and output the Birth event details (kitties details)
+to the user (via the GUI).
 
 
 

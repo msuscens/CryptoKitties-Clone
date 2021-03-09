@@ -53,51 +53,51 @@ function outerDecorationColor(color,code) {
 function eyeVariation(num) {
     $('#dnashape').html(num)
     switch (num) {
-        case 1:
+        case 0:
             normalEyes()
             $('#eyeName').html('Big Round Eyes')  //Set the badge
             break
-        case 2:
+        case 1:
             normalEyes()  //Reset eyes
             $('#eyeName').html("Look Down") 
             eyesType1()  
             break
-        case 3:
+        case 2:
             normalEyes()  
             $('#eyeName').html("Look Up")
             eyesType2()  
             break
-        case 4:
+        case 3:
             normalEyes() 
             $('#eyeName').html("Narrow pupils")
             eyesType3()
             break
-        case 5:
+        case 4:
             normalEyes()  
             $('#eyeName').html("Narrow pupils, looking left")
             eyesType4()  
             break
-        case 6:
+        case 5:
             normalEyes() 
             $('#eyeName').html("Narrow pupils, looking right")
             eyesType5() 
         break
-        case 7:
+        case 6:
             normalEyes()  
             $('#eyeName').html("Cross-eyed")
             eyesType6()  
         break
-        case 8:
+        case 7:
             normalEyes()  
             $('#eyeName').html("Lazy left-eye")
             eyesType7()  
         break
-        case 9:
+        case 8:
             normalEyes() 
             $('#eyeName').html("Lazy right-eye")
             eyesType8()  
         break
-        case 10:
+        case 9:
             normalEyes() 
             $('#eyeName').html("Two lazy eyes")
             eyesType9()  
@@ -170,51 +170,51 @@ function eyesType9() {  // Two lazy eyes
 function decorationVariation(num) {
     $('#dnadecoration').html(num)
     switch (num) {
-        case 1:
+        case 0:
             $('#decorationName').html('Short stripes down')
             normaldecoration()
             break
-        case 2:
+        case 1:
             $('#decorationName').html('Long stripes up')
             normaldecoration()
             patternType1()
             break
-        case 3:
+        case 2:
             $('#decorationName').html('Angle stripes')
             normaldecoration()
             patternType2()
             break
-        case 4:
+        case 3:
             $('#decorationName').html("'Bald' patch")
             normaldecoration()
             patternType3()
             break
-        case 5:
+        case 4:
             $('#decorationName').html('3-prong Leaf')
             normaldecoration()
             patternType4()
             break 
-        case 6:
+        case 5:
             $('#decorationName').html('Stripe with side blobs')
             normaldecoration()
             patternType5()
             break
-        case 7:
+        case 6:
             $('#decorationName').html('Two stripes')
             normaldecoration()
             patternType6()
             break  
-        case 8:
+        case 7:
             $('#decorationName').html('One strip')
             normaldecoration()
             patternType7()
             break 
-        case 9:
+        case 8:
             $('#decorationName').html('Spikey hair')
             normaldecoration()
             patternType8()
             break 
-        case 10:
+        case 9:
             $('#decorationName').html('No pattern')
             normaldecoration()
             patternType9()
@@ -284,43 +284,43 @@ function animationVariation(num) {
     $('#dnaanimation').html(num)
 
     switch (num) {
-        case 1:
+        case 0:
             $('#animationName').html('Roll head')
             animationType1()
         break
-        case 2:
+        case 1:
             $('#animationName').html('Swish tail')
             animationType2()
         break
-        case 3:
+        case 2:
             $('#animationName').html('Wiggle left ear')
             animationType3()
         break
-        case 4:
+        case 3:
             $('#animationName').html('Wiggle right ear')
             animationType4()
         break
-        case 5:
+        case 4:
             $('#animationName').html('Wiggle both ears')
             animationType5()
         break
-        case 6:
+        case 5:
             $('#animationName').html('Alert ears')
             animationType6()
         break
-        case 7:
+        case 6:
             $('#animationName').html('Twitch nose & whiskers')
             animationType7()
         break
-        case 8:
+        case 7:
             $('#animationName').html('Wandering eyes')
             animationType8()
         break
-        case 9:
+        case 8:
             $('#animationName').html('Standing up')
             animationType9()
         break
-        case 10:
+        case 9:
             $('#animationName').html('Hyperactive')
             animationType10()
         break

@@ -15,56 +15,65 @@ const defaultDNA = {
     "lastNum" :  1
     }
 
-// when page load
+// When page loads
 $( document ).ready(function() {
-
   getDefaultKittie()
-
 });
 
 function getDefaultKittie() {
-  $('#dnabody').html(defaultDNA.headColor);
-  $('#dnamouth').html(defaultDNA.mouthColor);
-  $('#dnaeyes').html(defaultDNA.eyesColor);
-  $('#dnaears').html(defaultDNA.earsColor);
-  $('#dnashape').html(defaultDNA.eyesShape)
-  $('#dnadecoration').html(defaultDNA.decorationPattern)
-  $('#dnadecorationMid').html(defaultDNA.decorationMidColor)
-  $('#dnadecorationSides').html(defaultDNA.decorationSidesColor)
-  $('#dnaanimation').html(defaultDNA.animation)
-  $('#dnaspecial').html(defaultDNA.lastNum)
+  try {
+    $('#dnabody').html(defaultDNA.headColor);
+    $('#dnamouth').html(defaultDNA.mouthColor);
+    $('#dnaeyes').html(defaultDNA.eyesColor);
+    $('#dnaears').html(defaultDNA.earsColor);
+    $('#dnashape').html(defaultDNA.eyesShape)
+    $('#dnadecoration').html(defaultDNA.decorationPattern)
+    $('#dnadecorationMid').html(defaultDNA.decorationMidColor)
+    $('#dnadecorationSides').html(defaultDNA.decorationSidesColor)
+    $('#dnaanimation').html(defaultDNA.animation)
+    $('#dnaspecial').html(defaultDNA.lastNum)
 
-  renderCat(defaultDNA)
+    renderCat(defaultDNA)
+  }
+  catch (err)
+  {
+    console.log(`Error In getDefaultKittie(): ${err}`)
+  }
 }
 
 function getRandomKittie() {
+  try {
+    const newDNA = {
+      "headColor" : getRandomIntegerBetween(10, 98),
+      "mouthColor" : getRandomIntegerBetween(10, 98),
+      "eyesColor" : getRandomIntegerBetween(10, 98),
+      "earsColor" : getRandomIntegerBetween(10, 98),
+      //Cattributes
+      "eyesShape" : getRandomIntegerBetween(0, 9),
+      "decorationPattern" : getRandomIntegerBetween(0, 9),
+      "decorationMidColor" : getRandomIntegerBetween(10, 98),
+      "decorationSidesColor" : getRandomIntegerBetween(10, 98),
+      "animation" :  getRandomIntegerBetween(0, 9),
+      "lastNum" :  getRandomIntegerBetween(0, 9)
+    }
 
-  const newDNA = {
-    "headColor" : getRandomIntegerBetween(10, 98),
-    "mouthColor" : getRandomIntegerBetween(10, 98),
-    "eyesColor" : getRandomIntegerBetween(10, 98),
-    "earsColor" : getRandomIntegerBetween(10, 98),
-    //Cattributes
-    "eyesShape" : getRandomIntegerBetween(1, 10),
-    "decorationPattern" : getRandomIntegerBetween(1, 10),
-    "decorationMidColor" : getRandomIntegerBetween(10, 98),
-    "decorationSidesColor" : getRandomIntegerBetween(10, 98),
-    "animation" :  getRandomIntegerBetween(1, 10),
-    "lastNum" :  getRandomIntegerBetween(1, 10)
+    $('#dnabody').html( newDNA.headColor )
+    $('#dnamouth').html( newDNA.mouthColor )
+    $('#dnaeyes').html( newDNA.eyesColor )
+    $('#dnaears').html( newDNA.earsColor )
+    $('#dnashape').html( newDNA.eyesShape )
+    $('#dnadecoration').html( newDNA.decorationPattern )
+    $('#dnadecorationMid').html( newDNA.decorationMidColor )
+    $('#dnadecorationSides').html( newDNA.decorationSidesColor )
+    $('#dnaanimation').html( newDNA.animation )
+    $('#dnaspecial').html( newDNA.lastNum )
+
+    renderCat(newDNA)
   }
-
-  $('#dnabody').html( newDNA.headColor )
-  $('#dnamouth').html( newDNA.mouthColor )
-  $('#dnaeyes').html( newDNA.eyesColor )
-  $('#dnaears').html( newDNA.earsColor )
-  $('#dnashape').html( newDNA.eyesShape )
-  $('#dnadecoration').html( newDNA.decorationPattern )
-  $('#dnadecorationMid').html( newDNA.decorationMidColor )
-  $('#dnadecorationSides').html( newDNA.decorationSidesColor )
-  $('#dnaanimation').html( newDNA.animation )
-  $('#dnaspecial').html( newDNA.lastNum )
-
-  renderCat(newDNA)
+  catch (err)
+  {
+    console.log(`Error In getRandomKittie(): ${err}`)
+  }
 }
 
 function getRandomIntegerBetween(low, high){
@@ -83,6 +92,7 @@ function getRandomIntegerBetween(low, high){
 }
 
 function getDna(){
+  try{
     let dna = ''
     dna += $('#dnabody').html()
     dna += $('#dnamouth').html()
@@ -95,11 +105,17 @@ function getDna(){
     dna += $('#dnaanimation').html()
     dna += $('#dnaspecial').html()
 
-    return parseInt(dna)
+    if (dna.length !== 16 ) throw `DNA string length should be 16 (not ${dna.length} digits)`
+
+    return BigInt(dna)
+  }
+  catch (err){
+    console.log(`Error In getDna(): ${err}`)
+  }
 }
 
 function renderCat(dna){
-
+  try{
     headColor(colors[dna.headColor],dna.headColor)
     $('#bodycolor').val(dna.headColor)
     mouthChestTailColor(colors[dna.mouthColor],dna.mouthColor)
@@ -118,6 +134,10 @@ function renderCat(dna){
     $('#outerDecorationColor').val(dna.decorationSidesColor)
     animationVariation(dna.animation)
     $('#animation').val(dna.animation)
+  }
+  catch (err){
+    console.log(`Error In renderCat(dna): ${err}`)
+  }
 }
 
 // Changing cat attributes (colors, eyes, patterns)
