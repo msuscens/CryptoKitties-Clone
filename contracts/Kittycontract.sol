@@ -3,11 +3,13 @@ pragma solidity 0.5.12;
 import "./IERC721.sol";
 import "./Safemath.sol";
 import "./Ownable.sol";
+import "./UtilsLibrary.sol";
 
 
 contract KittyContract is IERC721, Ownable{
 
     using SafeMath for uint256;
+    //using UtilsLibrary for uint256[];
 
     uint64 private constant _GEN0_CREATION_LIMIT = 10;
 
@@ -28,7 +30,7 @@ contract KittyContract is IERC721, Ownable{
 
     mapping (uint256 => address) private _kittyOwners;
     mapping (address => uint256) private _ownersKittyCount;
-
+    mapping (address => uint256[]) private _ownersKittyIds;
 
     constructor (string memory name, string memory symbol) public {
         _name = name;
@@ -68,6 +70,12 @@ contract KittyContract is IERC721, Ownable{
                   _kitties[kittyId].mumId, _kitties[kittyId].dadId, _kitties[kittyId].generation);
     }
 
+    function getAllYourKittyIds() external view returns(uint256[] memory){
+        // Set pointer to owners array of kitty Ids
+        return _ownersKittyIds[msg.sender];
+    }
+
+
 
     // IERC721 function implementations
 
@@ -106,8 +114,22 @@ contract KittyContract is IERC721, Ownable{
     function _transfer(address from, address to, uint256 tokenId) internal{
 
         if (from != address(0)){
+            // Take kittie token from the sender
+            //_ownersKittyIds[from].removeFrom(tokenId);
+
+            uint256[] storage sendersKittyIds = _ownersKittyIds[from];
+            for (uint256 i=0; i<_ownersKittyCount[from]; i++){
+                if (sendersKittyIds[i] == tokenId){
+                    sendersKittyIds[i] = sendersKittyIds[sendersKittyIds.length-1];
+                    sendersKittyIds.pop();
+                    break;
+                }
+            }
             _ownersKittyCount[from] = _ownersKittyCount[from].sub(1);
         }
+
+        // Give token to the receiver
+        _ownersKittyIds[to].push(tokenId);
         _ownersKittyCount[to] = _ownersKittyCount[to].add(1);
         _kittyOwners[tokenId] = to;
 

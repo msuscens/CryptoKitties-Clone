@@ -3,7 +3,7 @@ const web3 = new Web3(Web3.givenProvider);
 
 let instance;
 let user;
-let contractAddress = "0x40DD68392b435831EF98F5CA9d7196B80db4aA3B"
+let contractAddress = "0x4C0bB08B46C3a15332b51b95782BbaACEd7Ff469"
 
 $(document).ready( function(){
     // Prompt user to allow our website to use their metamask account to interact with the blockchain

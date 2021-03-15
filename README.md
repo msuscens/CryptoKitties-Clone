@@ -1,10 +1,15 @@
+Assignment Week 8 : Day 3 -5 - Cat Website Assignment
+1. Add a function in your smart contract that retrieves all cat id's owned by the msg.sender. 
+2. Add a page where you can see all the cats that you own. The cat's should be displayed visually.
+3. Add a navigation bar to your page where you can navigate between the different pages of your site.
+Bonus Assignment
+4. Create a good looking, attractive Home page to your site.
+
 Assignment Week 8 : Day2
 1. Add in web3.js to allow website connection to blockchain via MetaMask (test account with test ETH)
 2. Link-up UI's Create Kittie button to send the transaction (to create a kitty on the blockchain)
 3. Set an event listener for the kittie's Birth event, and output the Birth event details (kitties details)
 to the user (via the GUI).
-
-
 
 Assignment Week 8: Day 1 - Create new Kitty (Building upon previous assignments - see below)
 1. Write a public createKittyGen0(uint256 _genes) function, that employs a private _createkitty function.
