@@ -104,3 +104,18 @@ const colorPallete = {00: "ae494f",
 98: "344867"}
 
 
+//Random color
+function getColor() {
+    const randomColor = Math.floor(Math.random() * 16777215).toString(16);
+    return randomColor
+}
+
+//Generate colors for pallete
+function genColors(){
+    const colors = []
+    for(const i = 10; i < 99; i ++){
+      const color = getColor()
+      colors[i] = color
+    }
+    return colors
+}

@@ -1,404 +1,243 @@
 
-//Random color
-function getColor() {
-    const randomColor = Math.floor(Math.random() * 16777215).toString(16);
-    return randomColor
+function headColor(code, idCat="") {
+    $(`${idCat} .cat__head, ${idCat} .cat__chest`).css('background', '#' + colors[code])
+    $(`${idCat} #dnabody`).html(code)   // Update DNA display (below the cat)
 }
 
-function genColors(){
-    const colors = []
-    for(const i = 10; i < 99; i ++){
-      const color = getColor()
-      colors[i] = color
-    }
-    return colors
+// function headColor(color, code, idCat="") {
+//     $(`${idCat} .cat__head, ${idCat} .cat__chest`).css('background', '#' + color) // Update cat's color
+//     $(`${idCat} #dnabody`).html(code)        // Update DNA display (below the cat)
+// }
+
+function mouthChestTailColor(color,code, idCat="") {
+    $(`${idCat} .cat__mouth-contour, ${idCat} .cat__chest_inner, ${idCat} .cat__tail`).css(
+        'background', '#' + color
+    )
+    $(`${idCat} #dnamouth`).html(code)
 }
 
-function headColor(color,code) {
-    $('.cat__head, .cat__chest').css('background', '#' + color) //Change cat color
-    $('#headcode').html('code: '+code)    //Update sliders badge text
-    $('#dnabody').html(code)              //Update the body color DNA part (displayed below the cat)
+function eyesColor(color,code, idCat="") {
+    $(`${idCat} [class^="pupil-"]`).css('background', '#' + color)  
+    $(`${idCat} #dnaeyes`).html(code)
 }
 
-function mouthChestTailColor(color,code) {
-    $('.cat__mouth-contour, .cat__chest_inner, .cat__tail').css('background', '#' + color)
-    $('#mouthcode').html('code: '+code)
-    $('#dnamouth').html(code)
+function earsPawsColor(color,code, idCat="") {
+    $(`${idCat} [id$="Ear"], ${idCat} [class^="cat__paw"]`).css('background', '#' + color)
+    $(`${idCat} #dnaears`).html(code)
 }
 
-function eyesColor(color,code) {
-    $('[class^="pupil-"]').css('background', '#' + color)  
-    $('#eyescode').html('code: '+code)
-    $('#dnaeyes').html(code)
+function innerDecorationColor(color,code, idCat="") {
+    $(`${idCat} .cat__head-dots`).css('background', '#' + color) 
+    $(`${idCat} #dnadecorationMid`).html(code)
 }
 
-function earsPawsColor(color,code) {
-    $('[id$="Ear"], [class^="cat__paw"]').css('background', '#' + color)
-    $('#earscode').html('code: '+code)
-    $('#dnaears').html(code)
+function outerDecorationColor(color,code, idCat="") {
+    $(`${idCat} [class^="cat__head-dots_"]`).css('background', '#' + color)     
+    $(`${idCat} #dnadecorationSides`).html(code)
 }
 
-function innerDecorationColor(color,code) {
-    $('.cat__head-dots').css('background', '#' + color) 
-    $('#innerDecorationCode').html('code: '+code)
-    $('#dnadecorationMid').html(code)
+function eyeVariation(num, idCat="") {
+    normalEyes(idCat) //Reset eyes
+    $(`${idCat} #dnashape`).html(num)   // Update DNA display (below cat)
+    eyeVariations[num].setEyes(idCat)
 }
 
-function outerDecorationColor(color,code) {
-    $('[class^="cat__head-dots_"]').css('background', '#' + color)     
-    $('#outerDecorationCode').html('code: '+code)
-    $('#dnadecorationSides').html(code)
-}
-
-function eyeVariation(num) {
-    $('#dnashape').html(num)
-    switch (num) {
-        case 0:
-            normalEyes()
-            $('#eyeName').html('Big Round Eyes')  //Set the badge
-            break
-        case 1:
-            normalEyes()  //Reset eyes
-            $('#eyeName').html("Look Down") 
-            eyesType1()  
-            break
-        case 2:
-            normalEyes()  
-            $('#eyeName').html("Look Up")
-            eyesType2()  
-            break
-        case 3:
-            normalEyes() 
-            $('#eyeName').html("Narrow pupils")
-            eyesType3()
-            break
-        case 4:
-            normalEyes()  
-            $('#eyeName').html("Narrow pupils, looking left")
-            eyesType4()  
-            break
-        case 5:
-            normalEyes() 
-            $('#eyeName').html("Narrow pupils, looking right")
-            eyesType5() 
-        break
-        case 6:
-            normalEyes()  
-            $('#eyeName').html("Cross-eyed")
-            eyesType6()  
-        break
-        case 7:
-            normalEyes()  
-            $('#eyeName').html("Lazy left-eye")
-            eyesType7()  
-        break
-        case 8:
-            normalEyes() 
-            $('#eyeName').html("Lazy right-eye")
-            eyesType8()  
-        break
-        case 9:
-            normalEyes() 
-            $('#eyeName').html("Two lazy eyes")
-            eyesType9()  
-        break
-        default:
-            console.log(`eyeVariation(${num}): Unexpected parameter number`)
-        break
-    }
-}
-
-function normalEyes() {
+function normalEyes(idCat) {
     // Reset eye lids to fully open
-    $('.cat__eye').find('span').css('border', 'none')
+    $(`${idCat} .cat__eye`).find('span').css('border', 'none')
 
     // Reset pupil to round and centered
-    $('.cat__eye').find('span').css('width', '42px') 
-    $('.pupil-left').css('left', '42px')    
-    $('.pupil-right').css('left', '166px') 
+    $(`${idCat} .cat__eye`).find('span').css('width', '42px') 
+    $(`${idCat} .pupil-left`).css('left', '42px')    
+    $(`${idCat} .pupil-right`).css('left', '166px') 
 }
 
-function eyesType1() {  // Look down
-    $('.cat__eye').find('span').css('border-top', '15px solid')
+function eyesType1(idCat) {  // Look down
+    $(`${idCat} .cat__eye`).find('span').css('border-top', '15px solid')
 }
 
-function eyesType2() {  // Look up
-    $('.cat__eye').find('span').css('border-bottom', '15px solid')
+function eyesType2(idCat) {  // Look up
+    $(`${idCat} .cat__eye`).find('span').css('border-bottom', '15px solid')
 }
 
-function eyesType3() {  // Narrow pupils (straight ahead)
-    $('.cat__eye').find('span').css('width', '22px')  // Wide-42, Narrow-22 
-    $('.pupil-left').css('left', '52px')    // Recentre left & right pupils (ie. compensate for
-    $('.pupil-right').css('left', '176px')  // 20px width change by moving pupils left +10px)
+function eyesType3(idCat) {  // Narrow pupils (straight ahead)
+    $(`${idCat} .cat__eye`).find('span').css('width', '22px')  // Wide-42, Narrow-22 
+    $(`${idCat} .pupil-left`).css('left', '52px')    // Recentre left & right pupils (ie. compensate for
+    $(`${idCat} .pupil-right`).css('left', '176px')  // 20px width change by moving pupils left +10px)
 }
 
-function eyesType4() {  // Narrow pupils looking left
-    eyesType3() //Narrow pupils 
-    $('.pupil-left').css('left', '42px')    
-    $('.pupil-right').css('left', '166px') 
+function eyesType4(idCat) {  // Narrow pupils looking left
+    eyesType3(idCat) //Narrow pupils 
+    $(`${idCat} .pupil-left`).css('left', '42px')    
+    $(`${idCat} .pupil-right`).css('left', '166px') 
 }
 
-function eyesType5() {    // Narrow pupils looking right
-    eyesType3() //Narrow pupils 
-    $('.pupil-left').css('left', '62px')
-   /$('.pupil-right').css('left', '186px')
+function eyesType5(idCat) {    // Narrow pupils looking right
+    eyesType3(idCat) //Narrow pupils 
+    $(`${idCat} .pupil-left`).css('left', '62px')
+    $(`${idCat} .pupil-right`).css('left', '186px')
 }
 
-function eyesType6() {  // Cross-eyed
-    eyesType3() //Narrow pupils
-    $('.pupil-left').css('left', '62px') 
-    $('.pupil-right').css('left', '166px')
+function eyesType6(idCat) {  // Cross-eyed
+    eyesType3(idCat) //Narrow pupils
+    $(`${idCat} .pupil-left`).css('left', '62px') 
+    $(`${idCat} .pupil-right`).css('left', '166px')
 }
 
-function eyesType7() {  // Lazy left-eye
-    eyesType3() //Narrow pupils
-    $('.pupil-left').css('left', '42px')
+function eyesType7(idCat) {  // Lazy left-eye
+    eyesType3(idCat) //Narrow pupils
+    $(`${idCat} .pupil-left`).css('left', '42px')
 }
 
-function eyesType8() {  // Lazy right eye
-    eyesType3() //Narrow pupils
-    $('.pupil-right').css('left', '186px')
+function eyesType8(idCat) {  // Lazy right eye
+    eyesType3(idCat) //Narrow pupils
+    $(`${idCat} .pupil-right`).css('left', '186px')
 }
 
-function eyesType9() {  // Two lazy eyes
-    eyesType3() //Narrow pupils 
-    $('.pupil-left').css('left', '42px') 
-    $('.pupil-right').css('left', '186px')
+function eyesType9(idCat) {  // Two lazy eyes
+    eyesType3(idCat) //Narrow pupils 
+    $(`${idCat} .pupil-left`).css('left', '42px') 
+    $(`${idCat} .pupil-right`).css('left', '186px')
 }
 
 
-function decorationVariation(num) {
-    $('#dnadecoration').html(num)
-    switch (num) {
-        case 0:
-            $('#decorationName').html('Short stripes down')
-            normaldecoration()
-            break
-        case 1:
-            $('#decorationName').html('Long stripes up')
-            normaldecoration()
-            patternType1()
-            break
-        case 2:
-            $('#decorationName').html('Angle stripes')
-            normaldecoration()
-            patternType2()
-            break
-        case 3:
-            $('#decorationName').html("'Bald' patch")
-            normaldecoration()
-            patternType3()
-            break
-        case 4:
-            $('#decorationName').html('3-prong Leaf')
-            normaldecoration()
-            patternType4()
-            break 
-        case 5:
-            $('#decorationName').html('Stripe with side blobs')
-            normaldecoration()
-            patternType5()
-            break
-        case 6:
-            $('#decorationName').html('Two stripes')
-            normaldecoration()
-            patternType6()
-            break  
-        case 7:
-            $('#decorationName').html('One strip')
-            normaldecoration()
-            patternType7()
-            break 
-        case 8:
-            $('#decorationName').html('Spikey hair')
-            normaldecoration()
-            patternType8()
-            break 
-        case 9:
-            $('#decorationName').html('No pattern')
-            normaldecoration()
-            patternType9()
-            break 
-        default:
-            console.log(`decorationVariation(${num}): Unexpected parameter number`)
-        break                               
-    }
+function decorationVariation(num, idCat="") {
+    normaldecoration(idCat) //Reset decoration
+    $(`${idCat} #dnadecoration`).html(num)   // Update DNA display (below cat)
+    decorationVariations[num].setDecoration(idCat)
 }
 
-function normaldecoration() {
+function normaldecoration(idCat) {
     //Remove all style from other decorations (to reset)
-    $('.cat__head-dots').css({ "transform": "rotate(0deg)", "height": "48px", "width": "14px", "top": "1px", "border-radius": "0 0 50% 50%", "left": "101" })
-    $('.cat__head-dots_first').css({ "transform": "rotate(0deg)", "height": "35px", "width": "14px", "top": "1px", "border-radius": "50% 0 50% 50%", "left": "-20px"})
-    $('.cat__head-dots_second').css({ "transform": "rotate(0deg)", "height": "35px", "width": "14px", "top": "1px", "border-radius": "0 50% 50% 50%", "left": "20px" })
+    $(`${idCat} .cat__head-dots`).css({ "transform": "rotate(0deg)", "height": "48px", "width": "14px",
+                                        "top": "1px", "border-radius": "0 0 50% 50%", "left": "101" })
+    $(`${idCat} .cat__head-dots_first`).css({ "transform": "rotate(0deg)", "height": "35px", "width": "14px",
+                                        "top": "1px", "border-radius": "50% 0 50% 50%", "left": "-20px"})
+    $(`${idCat} .cat__head-dots_second`).css({ "transform": "rotate(0deg)", "height": "35px", "width": "14px",
+                                        "top": "1px", "border-radius": "0 50% 50% 50%", "left": "20px" })
 }
 
-function patternType1() {  // Long stripes up
-    $('.cat__head-dots').css({ "transform": "rotate(180deg)", "height": "95px"})
-    $('[class^="cat__head-dots_"]').css('height', '80px')
+function patternType1(idCat) {  // Long stripes up
+    $(`${idCat} .cat__head-dots`).css({ "transform": "rotate(180deg)", "height": "95px"})
+    $(`${idCat} [class^="cat__head-dots_"]`).css('height', '80px')
 }
 
-function patternType2() {  //Angle stripes
-    $('.cat__head-dots').css({ "transform": "rotate(-25deg)", "top":"-6px"})
-    $('.cat__head-dots_first').css('top','-5px')
-    $('.cat__head-dots_second').css({ "top":"8px", "border-radius":"0px 40% 50% 50%"})
+function patternType2(idCat) {  //Angle stripes
+    $(`${idCat} .cat__head-dots`).css({ "transform": "rotate(-25deg)", "top":"-6px"})
+    $(`${idCat} .cat__head-dots_first`).css('top','-5px')
+    $(`${idCat} .cat__head-dots_second`).css({ "top":"8px", "border-radius":"0px 40% 50% 50%"})
 }
 
-function patternType3() {  //'Bald' patch
-    $('.cat__head-dots').css({ "height":"40px", "width":"100px", "left": "60px",
-                            "border-radius": "50% 50% 30px 30px" })
-    $('[class^="cat__head-dots_"]').css('width', '0px')
+function patternType3(idCat) {  //'Bald' patch
+    $(`${idCat} .cat__head-dots`).css({ "height":"40px", "width":"100px", "left": "60px",
+                                        "border-radius": "50% 50% 30px 30px" })
+    $(`${idCat} [class^="cat__head-dots_"]`).css('width', '0px')
 }
 
-function patternType4() {  //3-prong leaf
-    $('.cat__head-dots_first').css({ "transform":"rotate(36deg)", "border-radius":"50% 0px 50% 50%" })
-    $('.cat__head-dots_second').css({ "transform":"rotate(-36deg)", "border-radius":"0px 50% 50% 50%" })
+function patternType4(idCat) {  //3-prong leaf
+    $(`${idCat} .cat__head-dots_first`).css({ "transform":"rotate(36deg)", "border-radius":"50% 0px 50% 50%" })
+    $(`${idCat} .cat__head-dots_second`).css({ "transform":"rotate(-36deg)", "border-radius":"0px 50% 50% 50%" })
 }
 
-function patternType5() {  //Stripe with side blobs
-    $('.cat__head-dots').css({ "width":"20px", "left": "98px" })
-    $('.cat__head-dots_first').css({ "width":"35px", "left":"-38px", "border-radius":"25px 0px 50% 50%"})
-    $('.cat__head-dots_second').css({ "width":"35px", "left":"23px", "border-radius":"0px 25px 50% 50%" })
+function patternType5(idCat) {  //Stripe with side blobs
+    $(`${idCat} .cat__head-dots`).css({ "width":"20px", "left": "98px" })
+    $(`${idCat} .cat__head-dots_first`).css({ "width":"35px", "left":"-38px", "border-radius":"25px 0px 50% 50%"})
+    $(`${idCat} .cat__head-dots_second`).css({ "width":"35px", "left":"23px", "border-radius":"0px 25px 50% 50%" })
 }
 
-function patternType6() {  //Two stripes
-    $('.cat__head-dots').css('width', '0px')
+function patternType6(idCat) {  //Two stripes
+    $(`${idCat} .cat__head-dots`).css('width', '0px')
 }
 
-function patternType7() {  //One stripe 
-    $('[class^="cat__head-dots_"]').css('width', '0px')
+function patternType7(idCat) {  //One stripe 
+    $(`${idCat} [class^="cat__head-dots_"]`).css('width', '0px')
 }
 
-function patternType8() {  //Spikey hair
-    $('.cat__head-dots').css({ "transform": "rotate(180deg)", "top": "-40px" })
+function patternType8(idCat) {  //Spikey hair
+    $(`${idCat} .cat__head-dots`).css({ "transform": "rotate(180deg)", "top": "-40px" })
 }
 
-function patternType9() {  //No pattern
-    $('.cat__head-dots').css('width', '0px')
-    $('[class^="cat__head-dots_"]').css('width', '0px')
+function patternType9(idCat) {  //No pattern
+    $(`${idCat} .cat__head-dots`).css('width', '0px')
+    $(`${idCat} [class^="cat__head-dots_"]`).css('width', '0px')
 }
 
 
-function animationVariation(num) {
-
-    removeAllAnimations()
-    $('#dnaanimation').html(num)
-
-    switch (num) {
-        case 0:
-            $('#animationName').html('Roll head')
-            animationType1()
-        break
-        case 1:
-            $('#animationName').html('Swish tail')
-            animationType2()
-        break
-        case 2:
-            $('#animationName').html('Wiggle left ear')
-            animationType3()
-        break
-        case 3:
-            $('#animationName').html('Wiggle right ear')
-            animationType4()
-        break
-        case 4:
-            $('#animationName').html('Wiggle both ears')
-            animationType5()
-        break
-        case 5:
-            $('#animationName').html('Alert ears')
-            animationType6()
-        break
-        case 6:
-            $('#animationName').html('Twitch nose & whiskers')
-            animationType7()
-        break
-        case 7:
-            $('#animationName').html('Wandering eyes')
-            animationType8()
-        break
-        case 8:
-            $('#animationName').html('Standing up')
-            animationType9()
-        break
-        case 9:
-            $('#animationName').html('Hyperactive')
-            animationType10()
-        break
-        default:
-            console.log(`animationVariation(${num}): Unexpected parameter number`)
-        break                               
-    }
+function animationVariation(num, idCat="") {
+    removeAllAnimations(idCat) //Reset animations
+    $(`${idCat} #dnaanimation`).html(num)   // Update DNA display (below cat)
+    animationVariations[num].setAnimation(idCat)
 }
 
-function removeAllAnimations() { 
 
-    $("#head").attr("class", "cat__head")
-    $("#leftEar").attr("class", "cat__ear--left")
-    $("#rightEar").attr("class", "cat__ear--right")
-    $("#tail").attr("class", "cat__tail")
+function removeAllAnimations(idCat) { 
+    $(`${idCat} #head`).attr("class", "cat__head")
+    $(`${idCat} #leftEar`).attr("class", "cat__ear--left")
+    $(`${idCat} #rightEar`).attr("class", "cat__ear--right")
+    $(`${idCat} #tail`).attr("class", "cat__tail")
 
-    $("#nose").attr("class", "cat__nose")
-    $("#leftWhiskers").attr("class", "cat__whiskers-left")
-    $("#rightWhiskers").attr("class", "cat__whiskers-right")
+    $(`${idCat} #nose`).attr("class", "cat__nose")
+    $(`${idCat} #leftWhiskers`).attr("class", "cat__whiskers-left")
+    $(`${idCat} #rightWhiskers`).attr("class", "cat__whiskers-right")
 
-    $("#eyes").attr("class", "cat__eye")
-    $("#cat").attr("class", "cat")
+    $(`${idCat} #eyes`).attr("class", "cat__eye")
+    $(`${idCat} #cat`).attr("class", "cat")
 
-    $("#leftFrontPaw").attr("class", "cat__paw-left_front")
-    $("#rightFrontPaw").attr("class", "cat__paw-right_front")
-    $("#leftRearPaw").attr("class", "cat__paw-left_rear")
-    $("#rightRearPaw").attr("class", "cat__paw-right_rear")
+    $(`${idCat} #leftFrontPaw`).attr("class", "cat__paw-left_front")
+    $(`${idCat} #rightFrontPaw`).attr("class", "cat__paw-right_front")
+    $(`${idCat} #leftRearPaw`).attr("class", "cat__paw-left_rear")
+    $(`${idCat} #rightRearPaw`).attr("class", "cat__paw-right_rear")
 }
 
-function animationType1() {  // Roll Head
-    $("#head").addClass("movingHead")
-    $("#leftEar").addClass("movingLeftEar")
-    $("#rightEar").addClass("movingRightEar")
+function animationType1(idCat) {  // Roll Head
+    $(`${idCat} #head`).addClass("movingHead")
+    $(`${idCat} #leftEar`).addClass("movingLeftEar")
+    $(`${idCat} #rightEar`).addClass("movingRightEar")
 }
 
-function animationType2() {  // Swish Tail
-    $("#tail").addClass("movingTail")
+function animationType2(idCat) {  // Swish Tail
+    $(`${idCat} #tail`).addClass("movingTail")
 }
 
-function animationType3() {  // Wiggle left ear
-    $("#leftEar").addClass("wiggleLeftEar")
-}
-function animationType4() {  // Wiggle right ear
-    $("#rightEar").addClass("wiggleRightEar")
+function animationType3(idCat) {  // Wiggle left ear
+    $(`${idCat} #leftEar`).addClass("wiggleLeftEar")
 }
 
-function animationType5() {  // Wiggle both ears
-    $("#leftEar").addClass("wiggleLeftEar")
-    $("#rightEar").addClass("wiggleRightEar")
+function animationType4(idCat) {  // Wiggle right ear
+    $(`${idCat} #rightEar`).addClass("wiggleRightEar")
 }
 
-function animationType6() {  // Alert ears
-    $("#leftEar").addClass("alertingLeftEar")
-    $("#rightEar").addClass("alertingRightEar")
+function animationType5(idCat) {  // Wiggle both ears
+    $(`${idCat} #leftEar`).addClass("wiggleLeftEar")
+    $(`${idCat} #rightEar`).addClass("wiggleRightEar")
 }
 
-function animationType7() {  // Twitch nose & whiskers
-    $("#nose").addClass("twitchingNose")
-    $("#leftWhiskers").addClass("twitchingLeftWhiskers")
-    $("#rightWhiskers").addClass("twitchingRightWhiskers")
+function animationType6(idCat) {  // Alert ears
+    $(`${idCat} #leftEar`).addClass("alertingLeftEar")
+    $(`${idCat} #rightEar`).addClass("alertingRightEar")
 }
 
-function animationType8() {  // Wandering eyes
-    $("#eyes").addClass("wanderingEyes")
+function animationType7(idCat) {  // Twitch nose & whiskers
+    $(`${idCat} #nose`).addClass("twitchingNose")
+    $(`${idCat} #leftWhiskers`).addClass("twitchingLeftWhiskers")
+    $(`${idCat} #rightWhiskers`).addClass("twitchingRightWhiskers")
 }
 
-function animationType9() {  // Stand up
-    $("#cat").addClass("catRising")
-    $("#leftRearPaw, #rightRearPaw").addClass("extendingRearLeg")
-    $("#leftFrontPaw, #rightFrontPaw").addClass("raisingFrontLeg")
+function animationType8(idCat) {  // Wandering eyes
+    $(`${idCat} #eyes`).addClass("wanderingEyes")
 }
 
-function animationType10() {  // Hyperactive
-    animationType1()     // Roll head
-    animationType2()     // Swish Tail
-    animationType5()    // Wiggle both ears
-    animationType7()    // Twitch nose & whiskers
-    animationType8()   // Wandering eyes
-    animationType9()   // Standing up
+function animationType9(idCat) {  // Stand up
+    $(`${idCat} #cat`).addClass("catRising")
+    $(`${idCat} #leftRearPaw, ${idCat} #rightRearPaw`).addClass("extendingRearLeg")
+    $(`${idCat} #leftFrontPaw, ${idCat} #rightFrontPaw`).addClass("raisingFrontLeg")
 }
 
+function animationType10(idCat) {  // Hyperactive
+    animationType1(idCat)     // Roll head
+    animationType2(idCat)     // Swish Tail
+    animationType5(idCat)    // Wiggle both ears
+    animationType7(idCat)    // Twitch nose & whiskers
+    animationType8(idCat)   // Wandering eyes
+    animationType9(idCat)   // Standing up
+}
