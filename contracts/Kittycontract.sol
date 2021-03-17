@@ -9,7 +9,7 @@ import "./UtilsLibrary.sol";
 contract KittyContract is IERC721, Ownable{
 
     using SafeMath for uint256;
-    //using UtilsLibrary for uint256[];
+//    using ArrayUtilsLibrary for uint256[];
 
     uint64 private constant _GEN0_CREATION_LIMIT = 10;
 
@@ -72,6 +72,7 @@ contract KittyContract is IERC721, Ownable{
 
     function getAllYourKittyIds() external view returns(uint256[] memory){
         // Set pointer to owners array of kitty Ids
+        // uint256 storage kittyIds = _ownersKittyIds[msg.sender]
         return _ownersKittyIds[msg.sender];
     }
 
@@ -115,16 +116,16 @@ contract KittyContract is IERC721, Ownable{
 
         if (from != address(0)){
             // Take kittie token from the sender
-            //_ownersKittyIds[from].removeFrom(tokenId);
+            // _ownersKittyIds[from].removeFrom(tokenId);
 
             uint256[] storage sendersKittyIds = _ownersKittyIds[from];
-            for (uint256 i=0; i<_ownersKittyCount[from]; i++){
-                if (sendersKittyIds[i] == tokenId){
-                    sendersKittyIds[i] = sendersKittyIds[sendersKittyIds.length-1];
-                    sendersKittyIds.pop();
-                    break;
-                }
-            }
+            // for (uint256 i=0; i<_ownersKittyCount[from]; i++){
+            //     if (sendersKittyIds[i] == tokenId){
+            //         sendersKittyIds[i] = sendersKittyIds[sendersKittyIds.length-1];
+            //         sendersKittyIds.pop();
+            //         break;
+            //     }
+            // }
             _ownersKittyCount[from] = _ownersKittyCount[from].sub(1);
         }
 

@@ -17,129 +17,129 @@ const defaultDNA = {
 const eyeVariations = [
     {
       "name" : "Big Round Eyes",
-      "setEyes" : normalEyes
+      "setEyesFunc" : normalEyes
     },
     {
       "name" : "Look Down",
-      "setEyes" : eyesType1
+      "setEyesFunc" : eyesType1
     },
     {
         "name" : "Look Up",
-        "setEyes" : eyesType2
+        "setEyesFunc" : eyesType2
     },
     {
         "name" : "Narrow pupils",
-        "setEyes" : eyesType3
+        "setEyesFunc" : eyesType3
     },
     {
         "name" : "Narrow pupils, looking left",
-        "setEyes" : eyesType4
+        "setEyesFunc" : eyesType4
     },
     {
         "name" : "Narrow pupils, looking right",
-        "setEyes" : eyesType5
+        "setEyesFunc" : eyesType5
     },
     {
         "name" : "Cross-eyed",
-        "setEyes" : eyesType6
+        "setEyesFunc" : eyesType6
     },
     {
         "name" : "Lazy left-eye",
-        "setEyes" : eyesType7
+        "setEyesFunc" : eyesType7
     },
     {
         "name" : "Lazy right-eye",
-        "setEyes" : eyesType8
+        "setEyesFunc" : eyesType8
     },
     {
         "name" : "Two lazy eyes",
-        "setEyes" : eyesType9
+        "setEyesFunc" : eyesType9
     }
   ]
 
 const decorationVariations = [
     {
         "name" : "Short stripes downs",
-        "setDecoration" : normaldecoration
+        "setDecorationFunc" : normaldecoration
     },
     {
         "name" : "Long stripes up",
-        "setDecoration" : patternType1
+        "setDecorationFunc" : patternType1
     },
     {
         "name" : "Angle stripes",
-        "setDecoration" : patternType2
+        "setDecorationFunc" : patternType2
     },
     {
         "name" : "'Bald' patch",
-        "setDecoration" : patternType3
+        "setDecorationFunc" : patternType3
     },
     {
         "name" : "3-prong Leaf",
-        "setDecoration" : patternType4
+        "setDecorationFunc" : patternType4
     },      
     {
         "name" : "Stripe with side blobs",
-        "setDecoration" : patternType5
+        "setDecorationFunc" : patternType5
     },
     {
         "name" : "Two stripes",
-        "setDecoration" : patternType6
+        "setDecorationFunc" : patternType6
     },      
     {
         "name" : "One strip",
-        "setDecoration" : patternType7
+        "setDecorationFunc" : patternType7
     },      
     {
         "name" : "Spikey hair",
-        "setDecoration" : patternType8
+        "setDecorationFunc" : patternType8
     },
     {
         "name" : "No pattern",
-        "setDecoration" : patternType9
+        "setDecorationFunc" : patternType9
     }
 ]
 
 const animationVariations = [
     {
         "name" : "Roll head",
-        "setAnimation" : animationType1
+        "setAnimationFunc" : animationType1
     },
     {
         "name" : "Swish tail",
-        "setAnimation" : animationType2
+        "setAnimationFunc" : animationType2
     },
     {
         "name" : "Wiggle left ear",
-        "setAnimation" : animationType3
+        "setAnimationFunc" : animationType3
     },
     {
         "name" : "Wiggle right ear",
-        "setAnimation" : animationType4
+        "setAnimationFunc" : animationType4
     },
     {
         "name" : "Wiggle both ears",
-        "setAnimation" : animationType5
+        "setAnimationFunc" : animationType5
     },      
     {
         "name" : "Alert ears",
-        "setAnimation" : animationType6
+        "setAnimationFunc" : animationType6
     },
     {
         "name" : "Twitch nose & whiskers",
-        "setAnimation" : animationType7
+        "setAnimationFunc" : animationType7
     },      
     {
         "name" : "Wandering eyes",
-        "setAnimation" : animationType8
+        "setAnimationFunc" : animationType8
     },
     {
         "name" : "Standing up",
-        "setAnimation" : animationType9
+        "setAnimationFunc" : animationType9
     },
     {
         "name" : "Hyperactive",
-        "setAnimation" : animationType10
+        "setAnimationFunc" : animationType10
     }
 ]
 

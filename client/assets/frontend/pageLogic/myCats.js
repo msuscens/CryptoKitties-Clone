@@ -2,7 +2,9 @@ const web3 = new Web3(Web3.givenProvider);
 
 let instance;
 let user;
-let contractAddress = "0x4C0bB08B46C3a15332b51b95782BbaACEd7Ff469"
+let contractAddress = "0xAB714687a2f21f589140e8325Dc1E212adae2F3d"
+
+// await initiateConnection()
 
 $(document).ready( function(){
     // Prompt user to allow our website to use their metamask account to interact with the blockchain
@@ -10,23 +12,24 @@ $(document).ready( function(){
         instance = new web3.eth.Contract(abi, contractAddress, {from: accounts[0]})
         user = accounts[0]
 
+    // initiateConnection()
+
         // Get the ids of all the cats that you own
-        instance.methods.getAllYourKittyIds().call({}, function(err, myKittieIds){
+        instance.methods.getAllYourKittyIds().call({}, function(error, myKittieIds){
             try {
-                if (err) throw "Error from getAllYourKittyIds().call(): " + err
+                if (error) throw "Error from getAllYourKittyIds().call(): " + error
 
                 // Display all the cats
                 for (let i=0; i<myKittieIds.length; i++) {
                     // Get the cat's details
-                    instance.methods.getKitty(myKittieIds[i]).call({}, function(err, kitty){
-                        if (err) throw "Error from getKitty(myKitties[i]).call(): " + err
+                    instance.methods.getKitty(myKittieIds[i]).call({}, function(errMsg, kitty){
+                        if (errMsg) throw "Error from getKitty(myKitties[i]).call(): " + errMsg
 
                         //Put the cat on the page
                         htmlKitty = getHtmlForKitty(myKittieIds[i]) 
                         $('#rowOfCats').append(htmlKitty)
 
-                        if (kitty.genes.length != 16) throw
-                            `Internal error: genes string ('${kitty.genes}') should be 16 characters (not ${kitty.genes.length})`
+                        if (kitty.genes.length != 16) throw `Internal error: genes string ('${kitty.genes}') should be 16 characters (not ${kitty.genes.length})`
                         const kittyDna = {
                             "headColor" : kitty.genes.substring(0, 2),
                             "mouthColor" : kitty.genes.substring(2, 4),
@@ -48,7 +51,6 @@ $(document).ready( function(){
                 console.log(err)
             }
         })
-
     })
 })
 

@@ -1,84 +1,3 @@
-// When page loads
-$( document ).ready(function() {
-  getDefaultKittie()
-});
-
-function getDefaultKittie() {
-  try {
-    // Set DNA display (below the cat)
-/*
-    $('#dnabody').html(defaultDNA.headColor);
-    $('#dnamouth').html(defaultDNA.mouthColor);
-    $('#dnaeyes').html(defaultDNA.eyesColor);
-    $('#dnaears').html(defaultDNA.earsColor);
-    $('#dnashape').html(defaultDNA.eyesShape)
-    $('#dnadecoration').html(defaultDNA.decorationPattern)
-    $('#dnadecorationMid').html(defaultDNA.decorationMidColor)
-    $('#dnadecorationSides').html(defaultDNA.decorationSidesColor)
-    $('#dnaanimation').html(defaultDNA.animation)
-    $('#dnaspecial').html(defaultDNA.lastNum)
-*/
-    renderCat(defaultDNA)
-    updateSliders(defaultDNA)
-  }
-  catch (err)
-  {
-    console.log(`Error In getDefaultKittie(): ${err}`)
-  }
-}
-
-function getRandomKittie() {
-  try {
-    const newDNA = {
-      "headColor" : getRandomIntegerBetween(10, 98),
-      "mouthColor" : getRandomIntegerBetween(10, 98),
-      "eyesColor" : getRandomIntegerBetween(10, 98),
-      "earsColor" : getRandomIntegerBetween(10, 98),
-      //Cattributes
-      "eyesShape" : getRandomIntegerBetween(0, 9),
-      "decorationPattern" : getRandomIntegerBetween(0, 9),
-      "decorationMidColor" : getRandomIntegerBetween(10, 98),
-      "decorationSidesColor" : getRandomIntegerBetween(10, 98),
-      "animation" :  getRandomIntegerBetween(0, 9),
-      "lastNum" :  getRandomIntegerBetween(0, 9)
-    }
-
-    // Set DNA display (below the cat)
-/*
-    $('#dnabody').html( newDNA.headColor )
-    $('#dnamouth').html( newDNA.mouthColor )
-    $('#dnaeyes').html( newDNA.eyesColor )
-    $('#dnaears').html( newDNA.earsColor )
-    $('#dnashape').html( newDNA.eyesShape )
-    $('#dnadecoration').html( newDNA.decorationPattern )
-    $('#dnadecorationMid').html( newDNA.decorationMidColor )
-    $('#dnadecorationSides').html( newDNA.decorationSidesColor )
-    $('#dnaanimation').html( newDNA.animation )
-    $('#dnaspecial').html( newDNA.lastNum )
-*/
-    renderCat(newDNA)
-    updateSliders(newDNA)
-  }
-  catch (err)
-  {
-    console.log(`Error In getRandomKittie(): ${err}`)
-  }
-}
-
-function getRandomIntegerBetween(low, high){
-  try{
-    if (low<0) throw "Error: Only supports positive integers - low is negative!"
-    if (low>high) throw "Error: low is greater than high!"
-
-    const rangeInclusive = high - low + 1 
-    const RandomValue = Math.floor(Math.random() * rangeInclusive) + low
-
-    return RandomValue
-  }
-  catch(err){
-    console.log(`In getRandomIntegerBetween(${low}, ${high}): ${err}`)
-  }
-}
 
 function getDna(){
   try{
@@ -103,18 +22,17 @@ function getDna(){
   }
 }
 
+
 function renderCat(dna, idCat=""){
   try{
     headColor(dna.headColor, idCat)
-    // headColor(colors[dna.headColor], dna.headColor, catId)
-
-    mouthChestTailColor(colors[dna.mouthColor],dna.mouthColor, idCat)
-    eyesColor(colors[dna.eyesColor],dna.eyesColor, idCat)
-    earsPawsColor(colors[dna.earsColor],dna.earsColor, idCat)
+    mouthChestTailColor(dna.mouthColor, idCat)
+    eyesColor(dna.eyesColor, idCat)
+    earsPawsColor(dna.earsColor, idCat)
     eyeVariation(dna.eyesShape, idCat)
     decorationVariation(dna.decorationPattern, idCat)
-    innerDecorationColor(colors[dna.decorationMidColor],dna.decorationMidColor, idCat)
-    outerDecorationColor(colors[dna.decorationSidesColor],dna.decorationSidesColor, idCat)
+    innerDecorationColor(dna.decorationMidColor, idCat)
+    outerDecorationColor(dna.decorationSidesColor, idCat)
     animationVariation(dna.animation, idCat)
 
     // Update Special DNA digit  
@@ -124,6 +42,7 @@ function renderCat(dna, idCat=""){
     console.log(`Error In renderCat(dna): ${err}`)
   }
 }
+
 
 function updateSliders(dna){
   try{
@@ -165,25 +84,24 @@ $('#bodycolor').change(()=>{
     const colorVal = $('#bodycolor').val()
     $('#headcode').html('code: '+colorVal)    // Update slider's badge
     headColor(colorVal)      // Update cat
-    // headColor(colors[colorVal],colorVal)      // Update cat
 })
 
 $('#mouthcolor').change(()=>{
   const colorVal = $('#mouthcolor').val()
   $('#mouthcode').html('code: '+colorVal)
-  mouthChestTailColor(colors[colorVal],colorVal)
+  mouthChestTailColor(colorVal)
 })
 
 $('#eyecolor').change(()=>{
   const colorVal = $('#eyecolor').val()
   $('#eyescode').html('code: '+colorVal)
-  eyesColor(colors[colorVal],colorVal)
+  eyesColor(colorVal)
 })
 
 $('#earcolor').change(()=>{
   const colorVal = $('#earcolor').val()
   $('#earscode').html('code: '+colorVal)
-  earsPawsColor(colors[colorVal],colorVal)
+  earsPawsColor(colorVal)
 })
 
 $('#eyeshape').change(()=>{
@@ -201,13 +119,13 @@ $('#decorativepattern').change(()=>{
 $('#innerDecorationColor').change(()=>{
   const colorVal = $('#innerDecorationColor').val()
   $('#innerDecorationCode').html('code: '+colorVal)
-  innerDecorationColor(colors[colorVal],colorVal)
+  innerDecorationColor(colorVal)
 })
 
 $('#outerDecorationColor').change(()=>{
   const colorVal = $('#outerDecorationColor').val()
   $('#outerDecorationCode').html('code: '+colorVal)
-  outerDecorationColor(colors[colorVal],colorVal)
+  outerDecorationColor(colorVal)
 })
 
 $('#animation').change(()=>{
@@ -215,5 +133,3 @@ $('#animation').change(()=>{
   $('#animationName').html(animationVariations[animationValue].name)
   animationVariation(animationValue)
 })
-
-

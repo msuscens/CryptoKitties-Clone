@@ -1,9 +1,14 @@
 const web3 = new Web3(Web3.givenProvider);
-// console.log(web3.version)
 
 let instance;
 let user;
-let contractAddress = "0x4C0bB08B46C3a15332b51b95782BbaACEd7Ff469"
+let contractAddress = "0xAB714687a2f21f589140e8325Dc1E212adae2F3d"
+
+// await initiateConnection()
+// When page loads
+$( document ).ready(function() {
+  getDefaultKittie()
+});
 
 $(document).ready( function(){
     // Prompt user to allow our website to use their metamask account to interact with the blockchain
@@ -11,8 +16,9 @@ $(document).ready( function(){
         instance = new web3.eth.Contract(abi, contractAddress, {from: accounts[0]})
         user = accounts[0]
 
-        // instance.events.Birth({}, function(error, event){ console.log(event) })
+    // initiateConnection()
 
+        // instance.events.Birth({}, function(error, event){ console.log(event) })
         instance.events.Birth().on('data', function(event){
             console.log(event)
             const owner = event.returnValues.owner
@@ -34,6 +40,44 @@ $(document).ready( function(){
         })
     })
 })
+
+
+function getDefaultKittie() {
+  try {
+    renderCat(defaultDNA)
+    updateSliders(defaultDNA)
+  }
+  catch (err)
+  {
+    console.log(`Error In getDefaultKittie(): ${err}`)
+  }
+}
+
+
+function getRandomKittie() {
+  try {
+    const newDNA = {
+      "headColor" : getRandomIntegerBetween(10, 98),
+      "mouthColor" : getRandomIntegerBetween(10, 98),
+      "eyesColor" : getRandomIntegerBetween(10, 98),
+      "earsColor" : getRandomIntegerBetween(10, 98),
+      //Cattributes
+      "eyesShape" : getRandomIntegerBetween(0, 9),
+      "decorationPattern" : getRandomIntegerBetween(0, 9),
+      "decorationMidColor" : getRandomIntegerBetween(10, 98),
+      "decorationSidesColor" : getRandomIntegerBetween(10, 98),
+      "animation" :  getRandomIntegerBetween(0, 9),
+      "lastNum" :  getRandomIntegerBetween(0, 9)
+    }
+    renderCat(newDNA)
+    updateSliders(newDNA)
+  }
+  catch (err)
+  {
+    console.log(`Error In getRandomKittie(): ${err}`)
+  }
+}
+
 
 function createKittie(){
   try {

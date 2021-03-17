@@ -4,42 +4,37 @@ function headColor(code, idCat="") {
     $(`${idCat} #dnabody`).html(code)   // Update DNA display (below the cat)
 }
 
-// function headColor(color, code, idCat="") {
-//     $(`${idCat} .cat__head, ${idCat} .cat__chest`).css('background', '#' + color) // Update cat's color
-//     $(`${idCat} #dnabody`).html(code)        // Update DNA display (below the cat)
-// }
-
-function mouthChestTailColor(color,code, idCat="") {
+function mouthChestTailColor(code, idCat="") {
     $(`${idCat} .cat__mouth-contour, ${idCat} .cat__chest_inner, ${idCat} .cat__tail`).css(
-        'background', '#' + color
+        'background', '#' + colors[code]
     )
     $(`${idCat} #dnamouth`).html(code)
 }
 
-function eyesColor(color,code, idCat="") {
-    $(`${idCat} [class^="pupil-"]`).css('background', '#' + color)  
+function eyesColor(code, idCat="") {
+    $(`${idCat} [class^="pupil-"]`).css('background', '#' + colors[code])  
     $(`${idCat} #dnaeyes`).html(code)
 }
 
-function earsPawsColor(color,code, idCat="") {
-    $(`${idCat} [id$="Ear"], ${idCat} [class^="cat__paw"]`).css('background', '#' + color)
+function earsPawsColor(code, idCat="") {
+    $(`${idCat} [id$="Ear"], ${idCat} [class^="cat__paw"]`).css('background', '#' + colors[code])
     $(`${idCat} #dnaears`).html(code)
 }
 
-function innerDecorationColor(color,code, idCat="") {
-    $(`${idCat} .cat__head-dots`).css('background', '#' + color) 
+function innerDecorationColor(code, idCat="") {
+    $(`${idCat} .cat__head-dots`).css('background', '#' + colors[code]) 
     $(`${idCat} #dnadecorationMid`).html(code)
 }
 
-function outerDecorationColor(color,code, idCat="") {
-    $(`${idCat} [class^="cat__head-dots_"]`).css('background', '#' + color)     
+function outerDecorationColor(code, idCat="") {
+    $(`${idCat} [class^="cat__head-dots_"]`).css('background', '#' + colors[code])     
     $(`${idCat} #dnadecorationSides`).html(code)
 }
 
 function eyeVariation(num, idCat="") {
     normalEyes(idCat) //Reset eyes
     $(`${idCat} #dnashape`).html(num)   // Update DNA display (below cat)
-    eyeVariations[num].setEyes(idCat)
+    eyeVariations[num].setEyesFunc(idCat)
 }
 
 function normalEyes(idCat) {
@@ -104,7 +99,7 @@ function eyesType9(idCat) {  // Two lazy eyes
 function decorationVariation(num, idCat="") {
     normaldecoration(idCat) //Reset decoration
     $(`${idCat} #dnadecoration`).html(num)   // Update DNA display (below cat)
-    decorationVariations[num].setDecoration(idCat)
+    decorationVariations[num].setDecorationFunc(idCat)
 }
 
 function normaldecoration(idCat) {
@@ -166,7 +161,7 @@ function patternType9(idCat) {  //No pattern
 function animationVariation(num, idCat="") {
     removeAllAnimations(idCat) //Reset animations
     $(`${idCat} #dnaanimation`).html(num)   // Update DNA display (below cat)
-    animationVariations[num].setAnimation(idCat)
+    animationVariations[num].setAnimationFunc(idCat)
 }
 
 
