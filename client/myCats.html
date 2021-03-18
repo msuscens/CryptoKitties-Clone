@@ -23,9 +23,29 @@
   <link rel="stylesheet" href="assets/frontend/css/frontend.css">
 </head>
   <body>
-    <div class="container p-5" style="margin-top: 12vh;margin-bottom: 10vh;">
+    <!-- Top Navigation bar -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <a class="navbar-brand" href="index.html">
+            <img src="assets/frontend/images/KittieLogo.png" width="60px" height="60px" alt="">
+        </a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup"
+            aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+          <div class="navbar-nav">
+            <a class="nav-item nav-link active" href="myCats.html">My Kitty-Pen <span class="sr-only">(current)</span></a>
+            <a class="nav-item nav-link" href="factory.html">Kitty-Factory</a>
+            <!-- <a class="nav-item nav-link" href="#"></a> -->
+            <!-- <a class="nav-item nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Disabled</a> -->
+          </div>
+        </div>
+    </nav>
+
+    <!-- Main page header -->
+    <div class="container p-5" style="margin-top: 2vh;margin-bottom: 6vh;">
         <div align="center">
-        <h1 class="c-white">My Kitty Catalogue</h1>
+        <h1 class="c-white">My Kitty-Pen</h1>
         <p class="c-white">(The Kitties that you own)</p>
     </div>
         <div class="row" id="rowOfCats">    <!-- Cats to be added dynamically here! -->
@@ -36,8 +56,8 @@
     </footer>
 
   </body>
-  
-  <script src="assets/frontend/pageLogic/myCats.js"></script>
+
+  <script src="assets/frontend/pageLogic/myCatsLogic.js"></script>
   <script src="assets/frontend/components/colors.js"></script>
   <script src="assets/frontend/components/catSettings.js"></script>
   <script src="assets/frontend/components/catFactory.js"></script>

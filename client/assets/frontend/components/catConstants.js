@@ -10,8 +10,8 @@ const defaultDNA = {
     "decorationPattern" : 1,
     "decorationMidColor" : 13,
     "decorationSidesColor" : 13,
-    "animation" :  1,
-    "lastNum" :  1
+    "animation" : 0,
+    "lastNum" : 1
     }
 
 const eyeVariations = [
