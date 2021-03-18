@@ -106,6 +106,9 @@ function getHtmlForKitty( id ){
                 </div>
             </div>
             <br>
+            <div class="genDiv">
+                <p><b>GEN: <span id="catGenNum">0</span></b></p>
+            </div>
             <div class="dnaDiv" id="catDNA">
                 <b>
                     DNA:
