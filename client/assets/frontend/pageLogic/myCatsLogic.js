@@ -1,58 +1,37 @@
-const web3 = new Web3(Web3.givenProvider);
 
-let instance;
-let user;
-let contractAddress = "0xAB714687a2f21f589140e8325Dc1E212adae2F3d"
+$(document).ready(async function(){
+    // Connect website to user's metamask (to allow interaction with Kittie SC)
+    const connected = await initiateConnection()
+    if (connected != true) console.log("Not connected to contract")
 
-// await initiateConnection()
+    DisplayAllOwnedKities()
+})
 
-$(document).ready( function(){
-    // Prompt user to allow our website to use their metamask account to interact with the blockchain
-    window.ethereum.enable().then(function(accounts){
-        instance = new web3.eth.Contract(abi, contractAddress, {from: accounts[0]})
-        user = accounts[0]
 
-    // initiateConnection()
-
-        // Get the ids of all the cats that you own
+function DisplayAllOwnedKities(){
+    try {
         instance.methods.getAllYourKittyIds().call({}, function(error, myKittieIds){
-            try {
-                if (error) throw "Error from getAllYourKittyIds().call(): " + error
+            if (error) throw "Error from getAllYourKittyIds().call(): " + error
+            
+            for (let i=0; i<myKittieIds.length; i++) {
+                // Get the cat's details
+                instance.methods.getKitty(myKittieIds[i]).call({}, function(errMsg, kitty){
+                    if (errMsg) throw "Error from getKitty(myKitties[i]).call(): " + errMsg
 
-                // Display all the cats
-                for (let i=0; i<myKittieIds.length; i++) {
-                    // Get the cat's details
-                    instance.methods.getKitty(myKittieIds[i]).call({}, function(errMsg, kitty){
-                        if (errMsg) throw "Error from getKitty(myKitties[i]).call(): " + errMsg
-
-                        //Put the cat on the page
-                        htmlKitty = getHtmlForKitty(myKittieIds[i]) 
-                        $('#rowOfCats').append(htmlKitty)
-
-                        if (kitty.genes.length != 16) throw `Internal error: genes string ('${kitty.genes}') should be 16 characters (not ${kitty.genes.length})`
-                        const kittyDna = {
-                            "headColor" : kitty.genes.substring(0, 2),
-                            "mouthColor" : kitty.genes.substring(2, 4),
-                            "eyesColor" : kitty.genes.substring(4, 6),
-                            "earsColor" : kitty.genes.substring(6, 8),
-                            "eyesShape" : parseInt( kitty.genes.substring(8, 9) ),
-                            "decorationPattern" : parseInt( kitty.genes.substring(9, 10) ),
-                            "decorationMidColor" : kitty.genes.substring(10, 12),
-                            "decorationSidesColor" : kitty.genes.substring(12, 14),
-                            "animation" : parseInt( kitty.genes.substring(14, 15) ),
-                            "lastNum" : parseInt( kitty.genes.substring(15, 16) )
-                          }
-
-                          renderCat(kittyDna, `#kitty${myKittieIds[i]}`)
-                    })
-                }
-            }
-            catch(err){
-                console.log(err)
+                    //Put the cat on the page (displayed according to its dna)
+                    htmlKitty = getHtmlForKitty(myKittieIds[i]) 
+                    $('#rowOfCats').append(htmlKitty)
+                    const kittyDna = getKittyDna(kitty.genes)
+                    renderCat(kittyDna, `#kitty${myKittieIds[i]}`)
+                })
             }
         })
-    })
-})
+    }
+    catch(err){
+        console.log(err)
+    }
+}
+
 
 function getHtmlForKitty( id ){
     try {
@@ -134,5 +113,28 @@ function getHtmlForKitty( id ){
     catch(err){
         console.log(err)
     }
+}
 
+
+function getKittyDna(genes){
+    try{
+        if (genes.length != 16) throw `genes string ('${genes}') should be 16 characters (not ${genes.length})`
+
+        const kittyDna = {
+            "headColor" : genes.substring(0, 2),
+            "mouthColor" : genes.substring(2, 4),
+            "eyesColor" : genes.substring(4, 6),
+            "earsColor" : genes.substring(6, 8),
+            "eyesShape" : parseInt( genes.substring(8, 9) ),
+            "decorationPattern" : parseInt( genes.substring(9, 10) ),
+            "decorationMidColor" : genes.substring(10, 12),
+            "decorationSidesColor" : genes.substring(12, 14),
+            "animation" : parseInt( genes.substring(14, 15) ),
+            "lastNum" : parseInt( genes.substring(15, 16) )
+        }
+        return(kittyDna)
+    }
+    catch (err){
+        console.log("Error from getKittyDna(genes): " + err)
+    }
 }

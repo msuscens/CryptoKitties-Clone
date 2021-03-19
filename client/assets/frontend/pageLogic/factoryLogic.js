@@ -1,22 +1,21 @@
-const web3 = new Web3(Web3.givenProvider);
+// const web3 = new Web3(Web3.givenProvider);
 
-let instance;
-let user;
-let contractAddress = "0xAB714687a2f21f589140e8325Dc1E212adae2F3d"
+// let instance;
+// let user;
+// let contractAddress = "0xAB714687a2f21f589140e8325Dc1E212adae2F3d"
 
-// await initiateConnection()
 // When page loads
-$( document ).ready(function() {
-  getDefaultKittie()
-});
+// $( document ).ready(function() {
+//   getDefaultKittie()
+// });
 
-$(document).ready( function(){
-    // Prompt user to allow our website to use their metamask account to interact with the blockchain
-    window.ethereum.enable().then(function(accounts){
-        instance = new web3.eth.Contract(abi, contractAddress, {from: accounts[0]})
-        user = accounts[0]
+$(document).ready(async function(){
 
-    // initiateConnection()
+    // Connect website to user's metamask (to allow interaction with Kittie SC)
+    const connected = await initiateConnection()
+    if (connected != true) console.log("Not connected to contract")
+
+    getDefaultKittie()
 
         // instance.events.Birth({}, function(error, event){ console.log(event) })
         instance.events.Birth().on('data', function(event){
@@ -38,7 +37,6 @@ $(document).ready( function(){
             console.log(error)
             console.log(receipt)
         })
-    })
 })
 
 
