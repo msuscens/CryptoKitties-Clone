@@ -1,3 +1,9 @@
+Assignment Week 9 Day 1: ERC712 Fullfilment - Approval
+1. Download the new IERC721 interface from this page (on the right), and replace the IERC721.sol in your project with this new interface.
+2. Implement IERC721 functions: approve, setApprovalForAll, getApproved, and isApprovedForAll.
+3. Implement IERC721 functions: safeTransferFrom (with and without the data parameter).
+4. Implement the supportsInterface function for ERC721 and ERC165.  
+
 Assignment Week 8 : Day 3 -5 - Cat Website Assignment
 1. Add a function in your smart contract that retrieves all cat id's owned by the msg.sender. 
 2. Add a page where you can see all the cats that you own. The cat's should be displayed visually.
