@@ -86,7 +86,7 @@ contract KittyContract is IERC721, Ownable {
         // require(_isOwner(msg.sender, dadId), "Must be owner of father kitty!")
         // require(_isOwner(msg.sender, mumId), "Must be owner of mother kitty!")
 
-        // Bread the new kitty
+        // Create the new kitty (with breeder becoming new kitties owner)
         uint256 newDna = _mixDna(_kitties[dadId].genes, _kitties[mumId].genes);
         uint256 dadGen = _kitties[dadId].generation;
         uint256 mumGen = _kitties[mumId].generation;
@@ -94,6 +94,7 @@ contract KittyContract is IERC721, Ownable {
         if (dadGen > mumGen)
             newGen = dadGen.add(1);
         else newGen = mumGen.add(1);
+
         uint256 newKittyId = _createKitty(
             mumId,
             dadId,
@@ -101,10 +102,6 @@ contract KittyContract is IERC721, Ownable {
             newDna,
             msg.sender
         );
-
-        // The breeder becomes the owner of the new kitty
-        _safeTransfer(address(0), msg.sender, newKittyId, "");
-
         return newKittyId;
     }
 
