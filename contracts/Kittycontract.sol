@@ -38,7 +38,6 @@ contract KittyContract is IERC721, Ownable {
     mapping(uint256 => address) private _kittiesApprovedOperator;
     mapping(address => mapping(address => bool)) private _ownersApprovedOperators;
 
-
     event Birth(
         address owner,
         uint256 kittenId,
@@ -60,6 +59,53 @@ contract KittyContract is IERC721, Ownable {
         require(_gen0KittiesCount < _GEN0_LIMIT, "Hit Gen0 creation limit!");
         _gen0KittiesCount = _gen0KittiesCount.add(1);
         _createKitty( 0, 0, 0, genes, msg.sender);
+    }
+
+
+    function breed(uint256 dadId, uint256 mumId) public returns (uint256)
+    {
+        // Ensure that the breeder is owner or guardian of parent cats 
+        require(
+            _isOwnerOrApproved(
+                msg.sender,
+                _kittiesOwner[dadId],
+                msg.sender,
+                dadId
+            ),
+            "Must have access to father cat!"
+        );
+        require(
+            _isOwnerOrApproved(
+                msg.sender,
+                _kittiesOwner[mumId],
+                msg.sender,
+                mumId
+            ),
+            "Must have access to mother cat!"
+        );
+        // require(_isOwner(msg.sender, dadId), "Must be owner of father kitty!")
+        // require(_isOwner(msg.sender, mumId), "Must be owner of mother kitty!")
+
+        // Bread the new kitty
+        uint256 newDna = _mixDna(_kitties[dadId].genes, _kitties[mumId].genes);
+        uint256 dadGen = _kitties[dadId].generation;
+        uint256 mumGen = _kitties[mumId].generation;
+        uint256 newGen;
+        if (dadGen > mumGen)
+            newGen = dadGen.add(1);
+        else newGen = mumGen.add(1);
+        uint256 newKittyId = _createKitty(
+            mumId,
+            dadId,
+            newGen,
+            newDna,
+            msg.sender
+        );
+
+        // The breeder becomes the owner of the new kitty
+        _safeTransfer(address(0), msg.sender, newKittyId, "");
+
+        return newKittyId;
     }
 
 
@@ -133,7 +179,7 @@ contract KittyContract is IERC721, Ownable {
         require(to != address(this), "Recipient is contract address!");
         require(_isOwner(msg.sender, tokenId), "Sender is not token owner!");
 
-        // Effects - Transfer token
+        // Effects: Transfer token
         _transfer(msg.sender, to, tokenId);
     }
 
@@ -216,9 +262,9 @@ contract KittyContract is IERC721, Ownable {
         view
         returns (bool)
     {
+        require(_isInExistance(tokenId), "Token doesn't exist!");
         require(_isOwner(from, tokenId), "'from' doesn't own token!");
         require(_isNotZero(to), "Recipient's address is zero!");
-        require(_isInExistance(tokenId), "Token doesn't exist!");
 
         return (
             _isOwner(sender, tokenId) ||
@@ -356,7 +402,7 @@ contract KittyContract is IERC721, Ownable {
         bytes memory data
     )
         internal
-// Q.       view // Not view because it could potentailly modify state -HOW? (eg. if called external contract called back???)
+// Q.       view // Not view because it could potentailly modify state BUT HOW? (eg. if called external contract called back???)
         returns (bool)
     {
         if (!_isContract(to)) return true;
@@ -402,8 +448,22 @@ contract KittyContract is IERC721, Ownable {
         );
         uint256 newKittenId = (_kitties.push(newKitty)).sub(1);
         emit Birth(owner, newKittenId, mumId, dadId, genes);
-        _transfer(address(0), owner, newKittenId);
+        _safeTransfer(address(0), owner, newKittenId, "");
+        // _transfer(address(0), owner, newKittenId);
         return newKittenId;
+    }
+
+
+    function _mixDna(uint256 dadDna, uint256 mumDna) internal pure returns (uint256) {
+        // Dad: 1122334455667788
+        // Mum: 8877665544332211
+        
+        uint256 firstEightDigits = dadDna.div(100000000);  // 11223344
+        uint256 lastEightDigits = mumDna % 100000000;   // 44332211
+
+        uint256 newDna = (firstEightDigits.mul(100000000)).add(lastEightDigits); // 1122334444332211
+
+        return newDna;
     }
 
 }

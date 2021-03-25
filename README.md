@@ -1,3 +1,11 @@
+Assignment Week 9 Day 1: DNA Mixing
+1. In the backend contract, write a breed() function.
+    - This should REVERT if the sender does not own the mom or dad kitties.
+    - Use the _mixDna() function to get the DNA of the new kitten.
+    - Determine the generation of the new kitten
+    - Transfer the new kitten to the sender.
+
+
 Assignment Week 9 Day 1: ERC712 Fullfilment - Approval
 1. Download the new IERC721 interface from this page (on the right), and replace the IERC721.sol in your project with this new interface.
 2. Implement IERC721 functions: approve, setApprovalForAll, getApproved, and isApprovedForAll.
