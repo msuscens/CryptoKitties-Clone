@@ -98,6 +98,12 @@ const abi = [
         "internalType": "uint256",
         "name": "genes",
         "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "generation",
+        "type": "uint256"
       }
     ],
     "name": "Birth",
@@ -163,12 +169,12 @@ const abi = [
     "inputs": [
       {
         "internalType": "uint256",
-        "name": "dadId",
+        "name": "mumId",
         "type": "uint256"
       },
       {
         "internalType": "uint256",
-        "name": "mumId",
+        "name": "dadId",
         "type": "uint256"
       }
     ],

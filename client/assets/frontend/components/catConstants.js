@@ -13,6 +13,12 @@ const defaultDNA = {
     "animation" : 0,
     "lastNum" : 1
     }
+    
+const defaultCat = {
+    id: "",
+    dna: defaultDNA,
+    gen: ""
+}
 
 const eyeVariations = [
     {

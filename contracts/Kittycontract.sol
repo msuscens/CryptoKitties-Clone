@@ -43,7 +43,8 @@ contract KittyContract is IERC721, Ownable {
         uint256 kittenId,
         uint256 mumId,
         uint256 dadId,
-        uint256 genes
+        uint256 genes,
+        uint256 generation
     );
 
 
@@ -62,18 +63,9 @@ contract KittyContract is IERC721, Ownable {
     }
 
 
-    function breed(uint256 dadId, uint256 mumId) public returns (uint256)
+    function breed(uint256 mumId, uint256 dadId) public returns (uint256)
     {
-        // Ensure that the breeder is owner or guardian of parent cats 
-        require(
-            _isOwnerOrApproved(
-                msg.sender,
-                _kittiesOwner[dadId],
-                msg.sender,
-                dadId
-            ),
-            "Must have access to father cat!"
-        );
+        // Ensure that the breeder is owner or guardian of parent cats
         require(
             _isOwnerOrApproved(
                 msg.sender,
@@ -83,17 +75,26 @@ contract KittyContract is IERC721, Ownable {
             ),
             "Must have access to mother cat!"
         );
-        // require(_isOwner(msg.sender, dadId), "Must be owner of father kitty!")
+        require(
+            _isOwnerOrApproved(
+                msg.sender,
+                _kittiesOwner[dadId],
+                msg.sender,
+                dadId
+            ),
+            "Must have access to father cat!"
+        );
         // require(_isOwner(msg.sender, mumId), "Must be owner of mother kitty!")
+        // require(_isOwner(msg.sender, dadId), "Must be owner of father kitty!")
 
         // Create the new kitty (with breeder becoming new kitties owner)
-        uint256 newDna = _mixDna(_kitties[dadId].genes, _kitties[mumId].genes);
-        uint256 dadGen = _kitties[dadId].generation;
+        uint256 newDna = _mixDna(_kitties[mumId].genes, _kitties[dadId].genes);
         uint256 mumGen = _kitties[mumId].generation;
+        uint256 dadGen = _kitties[dadId].generation;
         uint256 newGen;
-        if (dadGen > mumGen)
-            newGen = dadGen.add(1);
-        else newGen = mumGen.add(1);
+        if (mumGen > dadGen)
+            newGen = mumGen.add(1);
+        else newGen = dadGen.add(1);
 
         uint256 newKittyId = _createKitty(
             mumId,
@@ -444,19 +445,19 @@ contract KittyContract is IERC721, Ownable {
             }
         );
         uint256 newKittenId = (_kitties.push(newKitty)).sub(1);
-        emit Birth(owner, newKittenId, mumId, dadId, genes);
+        emit Birth(owner, newKittenId, mumId, dadId, genes, generation);
         _safeTransfer(address(0), owner, newKittenId, "");
         // _transfer(address(0), owner, newKittenId);
         return newKittenId;
     }
 
 
-    function _mixDna(uint256 dadDna, uint256 mumDna) internal pure returns (uint256) {
-        // Dad: 1122334455667788
-        // Mum: 8877665544332211
+    function _mixDna(uint256 mumDna, uint256 dadDna) internal pure returns (uint256) {
+        // Mum: 1122334455667788
+        // Dad: 8877665544332211
         
-        uint256 firstEightDigits = dadDna.div(100000000);  // 11223344
-        uint256 lastEightDigits = mumDna % 100000000;   // 44332211
+        uint256 firstEightDigits = mumDna.div(100000000);  // 11223344
+        uint256 lastEightDigits = dadDna % 100000000;   // 44332211
 
         uint256 newDna = (firstEightDigits.mul(100000000)).add(lastEightDigits); // 1122334444332211
 

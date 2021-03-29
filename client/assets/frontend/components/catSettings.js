@@ -1,6 +1,6 @@
 
 function getDna(){
-  try{
+  try {
     let dna = ''
     dna += $('#dnabody').html()
     dna += $('#dnamouth').html()
@@ -17,35 +17,39 @@ function getDna(){
 
     return BigInt(dna)
   }
-  catch (err){
-    console.log(`Error In getDna(): ${err}`)
+  catch (error) {
+    console.log(`Error In getDna(): ${error}`)
   }
 }
 
 
-function renderCat(dna, idCat=""){
-  try{
-    headColor(dna.headColor, idCat)
-    mouthChestTailColor(dna.mouthColor, idCat)
-    eyesColor(dna.eyesColor, idCat)
-    earsPawsColor(dna.earsColor, idCat)
-    eyeVariation(dna.eyesShape, idCat)
-    decorationVariation(dna.decorationPattern, idCat)
-    innerDecorationColor(dna.decorationMidColor, idCat)
-    outerDecorationColor(dna.decorationSidesColor, idCat)
-    animationVariation(dna.animation, idCat)
+function render(cat, idCat=""){
+  try {
+    headColor(cat.dna.headColor, idCat)
+    mouthChestTailColor(cat.dna.mouthColor, idCat)
+    eyesColor(cat.dna.eyesColor, idCat)
+    earsPawsColor(cat.dna.earsColor, idCat)
+    eyeVariation(cat.dna.eyesShape, idCat)
+    decorationVariation(cat.dna.decorationPattern, idCat)
+    innerDecorationColor(cat.dna.decorationMidColor, idCat)
+    outerDecorationColor(cat.dna.decorationSidesColor, idCat)
+    animationVariation(cat.dna.animation, idCat)
 
     // Update Special DNA digit  
-    $(`${idCat} #dnaspecial`).html( dna.lastNum ) // Update DNA display (below cat)
+    $(`${idCat} #dnaspecial`).html(cat.dna.lastNum) // Update DNA display (below cat)
+
+    // Update Generation field
+    $(`${idCat}`).find('#catGenNum').html(cat.gen)
+
   }
-  catch (err){
-    console.log(`Error In renderCat(dna): ${err}`)
+  catch (error){
+    console.log(`Error In render(cat, idCat=""): ${error}`)
   }
 }
 
 
 function updateSliders(dna){
-  try{
+  try {
     $('#bodycolor').val(dna.headColor)             //Update slider's value
     $('#headcode').html('code: '+dna.headColor)    //Update slider's badge
 
@@ -73,8 +77,8 @@ function updateSliders(dna){
     $('#animation').val(dna.animation)
     $('#animationName').html(animationVariations[dna.animation].name)
   }
-  catch (err){
-    console.log(`Error In updateSliders(dna): ${err}`)
+  catch (error){
+    console.log(`Error In updateSliders(dna): ${error}`)
   }
 }
 

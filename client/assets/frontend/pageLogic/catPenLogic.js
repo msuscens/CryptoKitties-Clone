@@ -1,4 +1,6 @@
+let myCatIds = [];
 
+// When page loads
 $(document).ready(async function(){
     // Connect website to user's metamask (to allow interaction with Kittie SC)
     const connected = await initiateConnection()
@@ -10,33 +12,46 @@ $(document).ready(async function(){
 
 function DisplayAllOwnedKities(){
     try {
-        instance.methods.getAllYourKittyIds().call({}, function(error, myKittieIds){
-            if (error) throw "Error from getAllYourKittyIds().call(): " + error
-            
+        instance.methods.getAllYourKittyIds().call({}, function(err, myKittieIds){
+            if (err) throw "Error from getAllYourKittyIds().call(): " + err
+
+            myCatIds = myKittieIds  
+
             for (let i=0; i<myKittieIds.length; i++) {
                 // Get the cat's details
-                instance.methods.getKitty(myKittieIds[i]).call({}, function(errMsg, kitty){
-                    if (errMsg) throw "Error from getKitty(myKitties[i]).call(): " + errMsg
+                const cat = {
+                    id: myKittieIds[i],
+                    dna: undefined,
+                    gen: undefined
+                }
+                instance.methods.getKitty(cat.id).call({}, function(errMsg, kitty){
+                    if (errMsg) throw "Error from getKitty(cat.id).call(): " + errMsg
 
                     //Put the cat on the page (displayed according to its dna)
-                    htmlKitty = getHtmlForKitty(myKittieIds[i]) 
+                    let htmlKitty = getHtmlForKitty(cat.id) 
                     $('#rowOfCats').append(htmlKitty)
-                    const kittyDna = getKittyDna(kitty.genes)
-                    renderCat(kittyDna, `#kitty${myKittieIds[i]}`)
+                    cat.dna = getKittyDna(kitty.genes)
+                    cat.gen = kitty.generation
+                    render(cat, `#kitty${cat.id}`)
                 })
             }
         })
     }
-    catch(err){
-        console.log(err)
+    catch(error){
+        console.log("In DisplayAllOwnedKities(): " + error)
     }
 }
 
 
-function getHtmlForKitty( id ){
+function getHtmlForKitty(id){
     try {
         let html = `
             <div id="kitty${id}" class="col-lg-4 catBox m-2 light-b-shadow">
+            <div class="catCheckBox custom-control custom-checkbox checkbox-xl">
+                <input type="checkbox" class="custom-control-input" id="CheckBoxCat-${id}">
+                <label class="custom-control-label" for="CheckBoxCat-${id}"></label>
+            </div>
+        
             <div id="cat" class="cat">
                 <div class="cat__ear">
                     <div id="leftEar" class="cat__ear--left">
@@ -106,35 +121,55 @@ function getHtmlForKitty( id ){
                     <span id="dnaspecial"></span>
                 </b>
             </div>
-        </div>
-        `
+        </div>`
         return(html)
     }
-    catch(err){
-        console.log(err)
+    catch (error) {
+        console.log("In getHtmlForKitty(id): " + error)
     }
 }
 
 
-function getKittyDna(genes){
-    try{
-        if (genes.length != 16) throw `genes string ('${genes}') should be 16 characters (not ${genes.length})`
+function breeding(){
+    try {
+        let catIds = getSelectedCatIds(myCatIds)
 
-        const kittyDna = {
-            "headColor" : genes.substring(0, 2),
-            "mouthColor" : genes.substring(2, 4),
-            "eyesColor" : genes.substring(4, 6),
-            "earsColor" : genes.substring(6, 8),
-            "eyesShape" : parseInt( genes.substring(8, 9) ),
-            "decorationPattern" : parseInt( genes.substring(9, 10) ),
-            "decorationMidColor" : genes.substring(10, 12),
-            "decorationSidesColor" : genes.substring(12, 14),
-            "animation" : parseInt( genes.substring(14, 15) ),
-            "lastNum" : parseInt( genes.substring(15, 16) )
+        // Check two cats (and only 2) are selected
+        if (catIds.length < 2) {
+            $("#selectError").text("Use check boxes to select two kitties!")
+            $("#selectError").css({'color': 'red', 'font-weight': 'bold'})
+            return false
         }
-        return(kittyDna)
+        if (catIds.length > 2) {
+            $("#selectError").text("Too many kitties! Please select only two!")
+            $("#selectError").css({'color': 'red', 'font-weight': 'bold'})
+            return
+        } 
+        // remove any prior error mesage
+        $("#selectError").text("")
+        $("#selectError").css({'color': 'black', 'font-weight': 'normal'})
+        
+        // Go to the Breed page
+        window.location.href =
+            `breed.html?firstCatId=${catIds[0]}&secondCatId=${catIds[1]}`
     }
-    catch (err){
-        console.log("Error from getKittyDna(genes): " + err)
+    catch(error){
+        console.log("Error from breeding(): " + error)
     }
+}
+
+
+    function getSelectedCatIds(catIds){
+        try {
+            let IdsSelectedCats = []
+            for (i=0; i<catIds.length; i++){
+                let idCheckBox = "#CheckBoxCat-" + catIds[i]
+                if ($(idCheckBox).prop("checked"))
+                    IdsSelectedCats.push(catIds[i])
+            }
+            return IdsSelectedCats
+        }
+        catch(error) {
+            console.log("Error from getSelectedCatIds(catIds): " + error)
+        }
 }
