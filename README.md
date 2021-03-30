@@ -1,3 +1,10 @@
+
+Assignment Week 9 Day 3: Implement More Randomness
+Regardless if you have the simple or advanced DNA/Gene algorithm, I want you to make some modifications. After you made these modifications, please hand in your code for today in Google Classroom in the assignment Day 3 Hand in.
+    i. For those of you that have kept the simple algorithm:  Add one more level of mixing into your algorithm. Get creative and see if you can find some other way of mixing the DNA's instead of just combining the two halves. 
+
+    ii. For those of you that built the advanced algorithm: I mentioned in the last video that you can implement even more randomness to spice things up even more. That's exactly what I want you to do. Take the random number we calculated in the previous video, and use it to select one of the pairs that will get an extra randomness treatment. Then generate a new, 2 digit, random number and set it as that pair. That DNA pair will now be completely random, independent from any parent. 
+
 Assignment Week 9 Day 2: DNA Mixing
 1. Backend contract: Write a breed() function:
     - This should REVERT if the sender does not own the mom or dad kitties.

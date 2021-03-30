@@ -2,6 +2,7 @@ pragma solidity 0.5.12;
 
 import "./IERC721.sol";
 import "./IERC721Receiver.sol";
+
 import "./Safemath.sol";
 import "./Ownable.sol";
 import "./ArrayUtils.sol";
@@ -87,8 +88,15 @@ contract KittyContract is IERC721, Ownable {
         // require(_isOwner(msg.sender, mumId), "Must be owner of mother kitty!")
         // require(_isOwner(msg.sender, dadId), "Must be owner of father kitty!")
 
-        // Create the new kitty (with breeder becoming new kitties owner)
-        uint256 newDna = _mixDna(_kitties[mumId].genes, _kitties[dadId].genes);
+        // Detrmine new kitties DNA
+        // uint256 newDna = _basicMixDna(_kitties[mumId].genes, _kitties[dadId].genes);
+        // uint256 newDna = _mixDna(_kitties[mumId].genes, _kitties[dadId].genes);
+
+        // uint256 newDna = _improvedMixDna(_kitties[mumId].genes, _kitties[dadId].genes);
+        uint256 newDna = _completeMixDna(_kitties[mumId].genes, _kitties[dadId].genes);
+
+
+        // Calculate new kitties Generation
         uint256 mumGen = _kitties[mumId].generation;
         uint256 dadGen = _kitties[dadId].generation;
         uint256 newGen;
@@ -96,6 +104,7 @@ contract KittyContract is IERC721, Ownable {
             newGen = mumGen.add(1);
         else newGen = dadGen.add(1);
 
+        // Create the new kitty (with breeder becoming new kitties owner)
         uint256 newKittyId = _createKitty(
             mumId,
             dadId,
@@ -452,7 +461,135 @@ contract KittyContract is IERC721, Ownable {
     }
 
 
-    function _mixDna(uint256 mumDna, uint256 dadDna) internal pure returns (uint256) {
+
+    function _mixDna(uint256 mumDna, uint256 dadDna) internal view returns (uint256) {
+        uint256[8] memory geneArray;
+        uint8 random = uint8( now % 256 ); // NB. Not 255 -'now % 256' to get numbers 0-255 !
+        uint256 i = 1;
+        uint256 index = 7; // end of array
+
+        // Create gene array (for each 2-digit pair of the 16-digit dna)
+        for (i = 1; i <=128; i= i*2 ) {
+
+            // DNA 16 digits
+            if (random & i != 0) {
+                geneArray[index] = uint8(mumDna % 100);  // %100 to take last two digits
+            } else {
+                geneArray[index] = uint8(dadDna % 100);  // %100 to take last two digits
+            }
+            // remove last two digits of the dna
+            mumDna = mumDna / 100;
+            dadDna = dadDna / 100;
+
+            index = index - 1; // move back one poistion (of 2-digits)
+        } 
+
+        uint256 newGene;
+        for (i = 0; i < 8; i++) {
+            newGene = newGene + geneArray[i];  // i=0 is the 2 most significant gene digits
+            if (i != 7) newGene = newGene * 100;
+        }
+
+        return newGene;
+    }
+
+
+    function _improvedMixDna(uint256 mumDna, uint256 dadDna) internal view returns (uint256) {
+        uint256[8] memory geneArray;
+        
+//        uint8 random = uint8( now % 256 );    // Issue using now (seconds since 1970) as only least significant digits change
+        uint256 value = _getHashAsInteger(now); // Resolution: Hash now to get more randomness (assuming 1 sec has pasted since last hash)
+        uint8 random = uint8( value % 256 );    // 2^8 = 256: To take least significant 8 digits
+        
+        uint256 i = 1;
+        uint256 index = 7; // end of array
+
+        // Create gene array (for each 2-digit pair of the 16-digit dna)
+        for (i = 1; i <=128; i= i*2 ) {
+
+            // DNA 16 digits
+            if (random & i != 0) {
+                geneArray[index] = uint8(mumDna % 100);  // %100 to take last two digits
+            } else {
+                geneArray[index] = uint8(dadDna % 100);  // %100 to take last two digits
+            }
+            // remove last two digits of the dna
+            mumDna = mumDna / 100;
+            dadDna = dadDna / 100;
+
+            index = index - 1; // move back one poistion (of 2-digits)
+        } 
+
+        // Construct the new (16-digit) dna number (from 8 x 2-digit genes)
+        uint256 newGene;
+        for (i = 0; i < 8; i++) {
+            newGene = newGene + geneArray[i];  // i=0 is the 2 most significant gene digits
+            if (i != 7) newGene = newGene * 100;
+        }
+
+        return newGene;
+    }    
+    
+    
+    function _completeMixDna(uint256 mumDna, uint256 dadDna) internal view returns (uint256) {
+    // Mixing all digits of 16 digit dna.  Note: For two-digit trait values (eg. colour) there's 
+    // a 50% chance of inheritance from either mother or father and 50% chance of another value
+    // (this other 2-digit value is composed of the most significant digit from the one parent, and
+    // the least significant digit from the other parrent - eg. mum 52, dad 93 may give 53 or 92).
+        uint256[16] memory geneArray;
+        
+        //  Replaced code below (with hash of now instead)        
+        // uint8 random = uint8( now % 256 ); 
+        // Initialy with following line but then this also replaced with hash of now pseudo-random number
+        // uint16 random = uint16( now % 65536 ); // 2^16 = 65536: To take 16 least-significant digits
+
+        // Calculate pseudo-random by hashing the time now 
+        uint256 value = _getHashAsInteger(now);
+        uint16 random = uint16( value % 65536 ); // 2^&16 = 65536: To take 16 least-significant digits
+        
+        uint256 i = 1;
+        uint256 index = 15; // end of array
+
+
+        // Create gene array (for each 2-digit pair of the 16-digit dna)
+        // for (i = 1; i <=128; i= i*2 ) {
+            
+        // Create gene array (for each digit of the 16-digit dna)
+            // Note: most-significant digit's value of 16-digit binary number = 2^15 = 32,768
+            //      most-significant digit's value of 8-digit binary number = 2^7 = 128
+        for (i = 1; i <=32768; i= i*2 ) {
+            
+            if (random & i != 0) {                      // Select mum's gene
+                geneArray[index] = uint16(mumDna % 10);  // Get least-significant digit
+            } else {                                    // Select dad's gene
+                geneArray[index] = uint16(dadDna % 10);  // Get least-significant digit
+            }
+            
+            // Remove the processed least-significant digit
+            mumDna = mumDna / 10;
+            dadDna = dadDna / 10;
+
+            index = index - 1; 
+        } 
+
+        // Construct the new (16-digit) dna number (from individual gene digits)
+        uint256 newGene;
+        for (i = 0; i < 16; i++) {
+            newGene = newGene + geneArray[i];  // i=0 is the most-significant gene digit
+            if (i != 15) newGene = newGene * 10;
+        }
+
+        return newGene;
+    }
+    
+    function _getHashAsInteger(uint value) internal pure returns (uint256) {
+        bytes32 hash = keccak256(abi.encodePacked(value));
+        return uint256(hash);
+    }
+
+
+
+    function _basicMixDna(uint256 mumDna, uint256 dadDna) internal pure returns (uint256) {
         // Mum: 1122334455667788
         // Dad: 8877665544332211
         
@@ -464,4 +601,21 @@ contract KittyContract is IERC721, Ownable {
         return newDna;
     }
 
+/*  Working out basic algorithm:
+            // Decimal:       1         2,      4,       8,       16,      32,       64,      128
+            // Binary: 00000001, 00000010, 00000100, 00001000, 00010000, 001000000, 01000000, 10000000
+
+            //Eg. In binary a random number may be 11001011
+            Algorithm:
+            Check each bit in turn (starting with least-significant bit)
+            E.g for fourth bit 00001000]
+                mum: 11001011
+                        &
+                dad: 00001000 = 00001000 (result)
+
+            if (result == 0) use mum gene
+            if (result == 1) use dad gene
+*/
+
 }
+
