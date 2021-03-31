@@ -93,8 +93,8 @@ contract KittyContract is IERC721, Ownable {
         // uint256 newDna = _mixDna(_kitties[mumId].genes, _kitties[dadId].genes);
 
         // uint256 newDna = _improvedMixDna(_kitties[mumId].genes, _kitties[dadId].genes);
-        uint256 newDna = _completeMixDna(_kitties[mumId].genes, _kitties[dadId].genes);
-
+        // uint256 newDna = _completeMixDna(_kitties[mumId].genes, _kitties[dadId].genes);
+        uint256 newDna = _bestRandomMixDna(_kitties[mumId].genes, _kitties[dadId].genes);
 
         // Calculate new kitties Generation
         uint256 mumGen = _kitties[mumId].generation;
@@ -530,7 +530,13 @@ contract KittyContract is IERC721, Ownable {
         return newGene;
     }    
     
-    
+
+    function _getHashAsInteger(uint value) internal pure returns (uint256) {
+        bytes32 hash = keccak256(abi.encodePacked(value));
+        return uint256(hash);
+    }
+
+
     function _completeMixDna(uint256 mumDna, uint256 dadDna) internal view returns (uint256) {
     // Mixing all digits of 16 digit dna.  Note: For two-digit trait values (eg. colour) there's 
     // a 50% chance of inheritance from either mother or father and 50% chance of another value
@@ -582,10 +588,100 @@ contract KittyContract is IERC721, Ownable {
         return newGene;
     }
     
-    function _getHashAsInteger(uint value) internal pure returns (uint256) {
-        bytes32 hash = keccak256(abi.encodePacked(value));
-        return uint256(hash);
+
+// Addition state variable for function _bestRandomMixDna(...)
+    uint256[] private _dnaFormat = [2,2,2,2,1,1,2,2,1,1];
+
+    function _bestRandomMixDna(uint256 mumDna, uint256 dadDna) internal view returns (uint256) {
+    // Randomly mixing parent dna.  Accounting for two-digit each trait values (eg. head colour).
+    // After creating new DNA, one of its gene values is randomised. This target gene is specified
+    // by the last digit of the dna number.
+    // For example, if last digit is 0, randomise most-significant digits 1&2 (as 2-digit gene);
+    // if last digit is 4, randomise digit 9 (as a 1-digit gene); and
+    // if last digit is 9, randomise last (least-significant) digit.
+
+        uint256[16] memory newDna;
+
+        // Get pseudo-random 16-digit number 
+        uint256 value = _getHashAsInteger(now);
+        uint16 random = uint16( value % 65536 ); // 2^&16 = 65536: To take 16 least-significant digits
+        
+        // initialise counters for processing dna
+        uint256 index = 16;         // counter for 16 digit dna digits
+        uint256 geneNumber = 10;    // counter for 10 genes in dna
+        uint256 i = 1;      
+        
+        // Mix dna of parents, from least-significant dna digit, gene by gene
+        for (i = 1; i <=32768; i= i*2 ) {
+            index = index - 1;
+            geneNumber = geneNumber - 1;
+            if (random & i != 0) {                      // Mum's gene selected
+                newDna[index] = uint16(mumDna % 10); 
+                if (_dnaFormat[geneNumber] == 2) {       // Take second gene digit from mum
+                    // Move on past processed first digit (of 2-digit value)
+                    i = i * 2;
+                    index = index - 1; 
+                    mumDna = mumDna / 10;
+                    dadDna = dadDna / 10;
+                    // Store second digit of mum's gene value
+                    newDna[index] = uint16(mumDna % 10);
+                }
+            } else {                                    // Dad's gene selected
+                newDna[index] = uint16(dadDna % 10);
+                if (_dnaFormat[geneNumber] == 2) {       // Also take second gene digit from daa
+                    // Move on past processed first digit (of 2-digit value)
+                    i = i * 2;
+                    index = index - 1; 
+                    mumDna = mumDna / 10;
+                    dadDna = dadDna / 10;
+                    // Store second digit of dad's gene value
+                    newDna[index] = uint16(dadDna % 10);
+                }
+            }
+            
+            // Move past the last processed digit, ready for next gene value
+            mumDna = mumDna / 10;
+            dadDna = dadDna / 10;
+        }
+        assert(geneNumber == 0);        // processed all 10 genes, as counted down by geneNumber
+        assert(index == 0);             // processed all 16 digits, as counted down by index
+        assert(newDna.length == 16);    // newDna string has been constructed to correct length
+        
+        
+    // Randomise one gene value - as indicated by last (single digit) gene in dna
+        // Target gene that is to be randomised
+        uint256 targetGene = newDna[15];
+        
+        // Find this target gene in the dna
+        uint256 dnaPos = 0;
+        for (i = 0; i < targetGene; i++) {
+           dnaPos = dnaPos + _dnaFormat[i];
+        }
+        uint256 geneDigits = _dnaFormat[targetGene];
+        
+        // Remove used digits from random value
+        uint256 unusedDigits = value / 65536;  // 2^&16 = 65,536
+        uint256 randomDigit = unusedDigits % 10;
+        
+        // Randomise the digit(s) of this target gene
+        newDna[dnaPos] = randomDigit;
+        if (geneDigits == 2) { 
+            unusedDigits = unusedDigits / 10;
+            randomDigit = unusedDigits % 10;
+            newDna[dnaPos+1] = randomDigit;
+        }
+    // Done remdomising single gene
+
+        // Construct the new (16-digit) dna number (from individual gene digits)
+        uint256 newGene;
+        for (i = 0; i < 16; i++) {
+            newGene = newGene + newDna[i];  // i=0 is the most-significant gene digit
+            if (i != 15) newGene = newGene * 10;
+        }
+
+        return newGene;
     }
+
 
 
 
