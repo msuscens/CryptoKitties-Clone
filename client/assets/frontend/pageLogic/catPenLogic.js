@@ -1,4 +1,4 @@
-let myCatIds = [];
+let myCatIds = [];  // All the kitties (kitty ids) that a user owns
 
 // When page loads
 $(document).ready(async function(){
@@ -14,10 +14,9 @@ function DisplayAllOwnedKities(){
     try {
         instance.methods.getAllYourKittyIds().call({}, function(err, myKittieIds){
             if (err) throw "Error from getAllYourKittyIds().call(): " + err
-
             myCatIds = myKittieIds  
 
-            for (let i=0; i<myKittieIds.length; i++) {
+            for (let i = 0; i < myKittieIds.length; i++) {
                 // Get the cat's details
                 const cat = {
                     id: myKittieIds[i],
@@ -33,6 +32,12 @@ function DisplayAllOwnedKities(){
                     cat.dna = getKittyDna(kitty.genes)
                     cat.gen = kitty.generation
                     render(cat, `#kitty${cat.id}`)
+
+                    // Enable click event on cat to toggle cat selection (check box)
+                    const catElement = document.getElementById(`kitty${cat.id}`) 
+                    catElement.addEventListener("click", function(){
+                        toggleCheckBox(`#CheckBoxCat-${cat.id}`)
+                    }, false)
                 })
             }
         })
@@ -133,6 +138,11 @@ function getHtmlForKitty(id){
 }
 
 
+function toggleCheckBox(id){
+    $(id).prop("checked") ? $(id).prop("checked", false) : $(id).prop("checked",true)
+}
+
+
 function breeding(){
     try {
         let catIds = getSelectedCatIds(myCatIds)
@@ -162,17 +172,17 @@ function breeding(){
 }
 
 
-    function getSelectedCatIds(catIds){
-        try {
-            let IdsSelectedCats = []
-            for (i=0; i<catIds.length; i++){
-                let idCheckBox = "#CheckBoxCat-" + catIds[i]
-                if ($(idCheckBox).prop("checked"))
-                    IdsSelectedCats.push(catIds[i])
-            }
-            return IdsSelectedCats
+function getSelectedCatIds(catIds){
+    try {
+        let IdsSelectedCats = []
+        for (i=0; i<catIds.length; i++){
+            let idCheckBox = "#CheckBoxCat-" + catIds[i]
+            if ($(idCheckBox).prop("checked"))
+                IdsSelectedCats.push(catIds[i])
         }
-        catch(error) {
-            console.log("Error from getSelectedCatIds(catIds): " + error)
-        }
+        return IdsSelectedCats
+    }
+    catch(error) {
+        console.log("Error from getSelectedCatIds(catIds): " + error)
+    }
 }
