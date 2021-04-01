@@ -46,7 +46,9 @@ function DisplayAllOwnedKities(){
 function getHtmlForKitty(id){
     try {
         let html = `
-            <div id="kitty${id}" class="col-lg-4 catBox m-2 light-b-shadow">
+          <div class="col-lg-4">
+          <div id="kitty${id}" class="catBox m-2 light-b-shadow">
+
             <div class="catCheckBox custom-control custom-checkbox checkbox-xl">
                 <input type="checkbox" class="custom-control-input" id="CheckBoxCat-${id}">
                 <label class="custom-control-label" for="CheckBoxCat-${id}"></label>
@@ -121,7 +123,8 @@ function getHtmlForKitty(id){
                     <span id="dnaspecial"></span>
                 </b>
             </div>
-        </div>`
+          </div>
+          </div>`
         return(html)
     }
     catch (error) {
