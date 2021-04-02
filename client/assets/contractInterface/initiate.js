@@ -2,7 +2,7 @@
 const web3 = new Web3(Web3.givenProvider);
 // console.log(web3.version)
 
-const contractAddress = "0x988169d87167A80adCBe647BcE6008E532f3c89B"
+const contractAddress = "0x574bb6d18b578D37A6BB79ca2cfb9F5a1d1AC930"
 
 let instance
 let user
