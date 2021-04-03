@@ -55314,14 +55314,15 @@
         }
       },
       "links": {
-        "ArrayUtils": "0xA59C38aCBa4B56729b7a15830e81A884aF7AC39b"
+        "ArrayUtils": "0xabFF579e1f32C4b090019618AEa5C51E2Bb09e58"
       },
-      "address": "0x574bb6d18b578D37A6BB79ca2cfb9F5a1d1AC930",
-      "transactionHash": "0x6451fe3173bb8f9792b044014dd17b6b9967522c31c6bf284595c457031dee60"
+      "address": "0x0F4E91600Dc34925f3CDfDA6c0b6eaCB8E07d1Bd",
+      "transactionHash": "0x6bf2bed2850bea3345175b4fa2a43f8006222b15825968668be59230fd048c07"
     }
   },
   "schemaVersion": "3.2.0",
-  "updatedAt": "2021-04-02T19:03:08.163Z",
+  "updatedAt": "2021-04-02T19:06:42.019Z",
+  "networkType": "ethereum",
   "devdoc": {
     "methods": {}
   },

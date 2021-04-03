@@ -477,6 +477,8 @@ contract KittyContract is IERC721, Ownable {
             mumDna = mumDna.div(100);
             dadDna = dadDna.div(100);
         } 
+        assert(index == 0);            // processed all 8 dna digit-pairs
+        assert(newGenes.length == 8);  // correct number of new dna digit-pairs
 
         uint256 dnaSequence;
         for (i = 0; i < 8; i++) {   // i==0 gives the 2 most-sig gene digits
@@ -518,6 +520,8 @@ contract KittyContract is IERC721, Ownable {
             mumDna = mumDna.div(100);
             dadDna = dadDna.div(100);
         } 
+        assert(index == 0);            // processed all 8 dna digit-pairs
+        assert(newGenes.length == 8);  // correct number of new dna digit-pairs
 
         // Construct the new (16-digit) dna number (from 8 x 2-digit genes)
         uint256 dnaSequence;
@@ -572,7 +576,7 @@ contract KittyContract is IERC721, Ownable {
             dadDna = dadDna.div(10);
         } 
         assert(index == 0);            // processed all 16 dna digits
-        assert(newGenes.length == 16); // correct number of new genes
+        assert(newGenes.length == 16); // correct number of new dna digits
 
         // Construct the (16-digit) dna number (from gene digits)
         uint256 dnaSequence;
@@ -643,7 +647,7 @@ contract KittyContract is IERC721, Ownable {
         }
         assert(geneNumber == 0);       // processed all 10 dna genes
         assert(index == 0);            // processed all 16 dna digits
-        assert(newGenes.length == 16); // correct number of new genes
+        assert(newGenes.length == 16); // correct number of new dna digits
         
         
         // Randomise one 'target' gene - as specified by last gene (single digit)
