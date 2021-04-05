@@ -5,7 +5,6 @@ import "./KittyContract.sol";
 import "./Ownable.sol";
 
 import "./Safemath.sol";
-// import "./ArrayUtils.sol";
 
 contract KittyMarketplace is Ownable, IKittyMarketplace {
     using SafeMath for uint256;
