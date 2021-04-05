@@ -7,7 +7,7 @@ import "./Ownable.sol";
 import "./Safemath.sol";
 // import "./ArrayUtils.sol";
 
-contract KittyMarketPlace is Ownable, IKittyMarketPlace {
+contract KittyMarketplace is Ownable, IKittyMarketplace {
     using SafeMath for uint256;
     // using ArrayUtils for uint256[];
 
@@ -50,11 +50,7 @@ contract KittyMarketPlace is Ownable, IKittyMarketPlace {
         view
         returns(address, uint256, uint256, uint256, bool)
     {
-        //Offer storage theOffer = _tokenIdToOffer[tokenId];
-        //require(theOffer != Offer(0), "Token is not on offer for sale!");
-        // require(_tokenIdToOffer[tokenId] != Offer(0), "Token is not on offer for sale!");
-
-        // If attempt to access non existance offer will throw an error !?
+        // If attempt to access non existance offer will throw an error!?
         return (
             _tokenIdToOffer[tokenId].seller,
             _tokenIdToOffer[tokenId].price,
@@ -69,7 +65,6 @@ contract KittyMarketPlace is Ownable, IKittyMarketPlace {
      */
     function getAllTokenOnSale() external view  returns(uint256[] memory) {
 
-        // uint256[] storage listOfOffers = new uint256[];
         uint256 totalOffers = _offers.length;
         uint256[] memory maxListOfferIds = new uint256[](totalOffers);
 
@@ -77,7 +72,6 @@ contract KittyMarketPlace is Ownable, IKittyMarketPlace {
         uint256 activeOffers = 0;
         for (i = 0; i < totalOffers; i++){
             if (_offers[i].active == true) {
-                // listOfOffers.push(_offers[i].tokenId);
                 maxListOfferIds[activeOffers] = _offers[i].tokenId;
                 activeOffers = activeOffers.add(1);
             }
@@ -102,8 +96,6 @@ contract KittyMarketPlace is Ownable, IKittyMarketPlace {
      */
     function setOffer(uint256 price, uint256 tokenId) external {
 
-        // address owner = _kittyContract.ownerOf(tokenId);
-        // require(msg.sender == owner, "Only owner can offer token!");
         require(_isKittyOwner(msg.sender, tokenId), "Only owner can offer token!");
         require(_isOnOffer(tokenId) == false, "An offer already exists!");
         require(
@@ -113,8 +105,6 @@ contract KittyMarketPlace is Ownable, IKittyMarketPlace {
             ),
             "Marketplace must be an operator!"
         );
-
-        // address payable seller = address(uint160(msg.sender));
 
         Offer memory newOffer = Offer(
             {
@@ -190,16 +180,9 @@ contract KittyMarketPlace is Ownable, IKittyMarketPlace {
     function _removeOffer(uint256 tokenId) internal {
         Offer memory toBeRemoved = _tokenIdToOffer[tokenId];
 
-        //delete _tokenIdToOffer[tokenId];
-        // delete _offers[toBeRemoved.index];  // This leaves an empty element in the array ...
-
-        // Alternative overwrite the deleted offer with the last offer in the array (so that array doesn't contain empty offer element)
-        // Note: This requires the last offer in the array (that is moved) to have it's offer index updated to new array position,
-        // and likewise the mapping's same offer record will need its index field updated.
-
         uint256 lastIndex = _offers.length.sub(1);
         if (toBeRemoved.index < lastIndex) { // not the last offer in the array
-            // Move last offer (in array) to overwrite the offer to be removed
+            // Move last offer record (in array) to overwrite the offer to be removed
             Offer memory lastOffer = _offers[lastIndex];
             lastOffer.index = toBeRemoved.index;       // poisition to which last offer record will be moved
             _offers[toBeRemoved.index] = lastOffer;    // overwrite offer to be removed (with last offer record) 

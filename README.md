@@ -1,5 +1,5 @@
-Assignement Week 9 Day 4: Implement a Kitty Marketplace Contract
- - Download the interface IKittyMarketplace'.sol (from the download section on the right). Extract the zip file to get the .sol file and add it to your project.
+Assignement Week 9 Day 4: Implement a backend Kitty Marketplace Contract
+ - Download the interface IKittyMarketPlace'.sol (from the download section on the right). Extract the zip file to get the .sol file and add it to your project.
  - Implement the KittyMarketPlace.sol
 
 
