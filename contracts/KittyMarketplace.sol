@@ -8,7 +8,6 @@ import "./Safemath.sol";
 
 contract KittyMarketplace is Ownable, IKittyMarketplace {
     using SafeMath for uint256;
-    // using ArrayUtils for uint256[];
 
     KittyContract private _kittyContract;
 
@@ -30,10 +29,7 @@ contract KittyMarketplace is Ownable, IKittyMarketplace {
         setKittyContract(kittyContractAddress);
     }
 
-    /**
-    * Set the current KittyContract address and initialize the instance of Kittycontract.
-    * Requirement: Only the contract owner can call.
-     */
+
     function setKittyContract(address kittyContractAddress)
         public
         onlyOwner
@@ -65,23 +61,23 @@ contract KittyMarketplace is Ownable, IKittyMarketplace {
     function getAllTokenOnSale() external view  returns(uint256[] memory) {
 
         uint256 totalOffers = _offers.length;
-        uint256[] memory maxListOfferIds = new uint256[](totalOffers);
+        uint256[] memory allOfferIds = new uint256[](totalOffers);
 
         uint256 i;
         uint256 activeOffers = 0;
         for (i = 0; i < totalOffers; i++){
             if (_offers[i].active == true) {
-                maxListOfferIds[activeOffers] = _offers[i].tokenId;
+                allOfferIds[activeOffers] = _offers[i].tokenId;
                 activeOffers = activeOffers.add(1);
             }
         }
 
-        if (activeOffers == totalOffers) return maxListOfferIds;
+        if (activeOffers == totalOffers) return allOfferIds;
 
-        // Create array of correct size
+        // Create correctly sized smaller array (as some offers weren't active)
         uint256[] memory activeOfferIds = new uint256[](activeOffers);
         for (i = 0; i < activeOffers; i++) {
-            activeOfferIds[i] = maxListOfferIds[i];
+            activeOfferIds[i] = allOfferIds[i];
         }
         return activeOfferIds;
     }
@@ -95,19 +91,16 @@ contract KittyMarketplace is Ownable, IKittyMarketplace {
      */
     function setOffer(uint256 price, uint256 tokenId) external {
 
-        require(_isKittyOwner(msg.sender, tokenId), "Only owner can offer token!");
-        require(_isOnOffer(tokenId) == false, "An offer already exists!");
+        require(_isKittyOwner(msg.sender, tokenId), "Only owner can offer for sale!");
+        require(_isOnOffer(tokenId) == false, "Already on offer for sale!");
         require(
-            _kittyContract.isApprovedForAll(
-                _kittyContract.ownerOf(tokenId),
-                msg.sender
-            ),
-            "Marketplace must be an operator!"
+            _kittyContract.isApprovedForAll(msg.sender, address(this)),
+            "Contract must be sales operator!"
         );
 
         Offer memory newOffer = Offer(
             {
-                seller: address(uint160(msg.sender)),
+                seller: msg.sender,  // address(uint160(msg.sender)),
                 price: price,
                 index: _offers.length,
                 tokenId: tokenId,
@@ -128,12 +121,13 @@ contract KittyMarketplace is Ownable, IKittyMarketplace {
     function removeOffer(uint256 tokenId) external {
 
         require(_isOnOffer(tokenId) == true, "Active offer doesn't exist!");
-        address seller = _tokenIdToOffer[tokenId].seller;
-        require(msg.sender == seller, "Only seller can remove offer!");
+        require(
+            msg.sender == _tokenIdToOffer[tokenId].seller,
+            "Only seller can remove offer!"
+        );
 
         _removeOffer(tokenId);
-
-        emit MarketTransaction("Remove offer", seller, tokenId);
+        emit MarketTransaction("Remove offer", msg.sender, tokenId);
     }
 
     /**
@@ -150,6 +144,16 @@ contract KittyMarketplace is Ownable, IKittyMarketplace {
 
         _removeOffer(tokenId);
 
+    // *** Make this logic pull instead of push (see consensus best practice guide for smart contract security)
+    // *** Ie. Replace transfer() and instead use call()
+        if (msg.value > 0) {
+            // tokenOffer.seller.transfer(tokenOffer.price);
+
+            // *** Is this correct?? Review / test
+            // This forwards all available gas. Be sure to check the return value!
+            (bool success, ) = tokenOffer.seller.call.value(msg.value)("");
+            require(success, "Payment to seller failed!");
+        }
         _kittyContract.safeTransferFrom(tokenOffer.seller, msg.sender, tokenId);
 
         emit MarketTransaction("Buy", tokenOffer.seller, tokenId);
@@ -192,4 +196,3 @@ contract KittyMarketplace is Ownable, IKittyMarketplace {
     }
 
 }
-
