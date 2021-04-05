@@ -495,7 +495,7 @@ contract KittyContract is IERC721, Ownable {
         view
         returns (uint256)
     {
-    // Mixes 16 digits of parent's dna, 2-digits at a time, to make new dna.
+    // Mix 16 digits of parent's dna, 2-digits at a time, to make new dna.
     // Note: This doesn't cause any gene mutation, each gene value will always 
     // come from either the mum or dad.  However, single-digit adjacent genes
     // (ie. genes 5&6 and 9&10) will always come from only one parent.

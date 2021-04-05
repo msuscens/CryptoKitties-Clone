@@ -1,3 +1,7 @@
+Assignement Week 9 Day 4: Implement a Kitty Marketplace Contract
+ - Download the interface IKittyMarketplace'.sol (from the download section on the right). Extract the zip file to get the .sol file and add it to your project.
+ - Implement the KittyMarketPlace.sol
+
 
 Assignment Week 9 Day 3: Implement More Randomness
 Regardless if you have the simple or advanced DNA/Gene algorithm, I want you to make some modifications. After you made these modifications, please hand in your code for today in Google Classroom in the assignment Day 3 Hand in.
