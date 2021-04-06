@@ -47,3 +47,27 @@ function reportOnBirthEvent() {
         console.log(receipt)
     })
 }
+
+
+// *** TODO - MOVE INTO SHARED CODE - SHARED WITH KITTY PEN (SO REMOVE ALSO FROM KITTY PEN LOGIC JS FILE)
+function toggleCheckBox(id){
+    $(id).prop("checked") ? $(id).prop("checked", false) : $(id).prop("checked",true)
+}
+
+
+// *** TODO - MOVE INTO SHARED CODE - SHARED WITH KITTY PEN (SO REMOVE ALSO FROM KITTY PEN LOGIC JS FILE)
+function getSelectedCatIds(catIds){
+    try {
+        let IdsSelectedCats = []
+        for (i=0; i<catIds.length; i++){
+            let idCheckBox = "#CheckBoxCat-" + catIds[i]
+            if ($(idCheckBox).prop("checked"))
+                IdsSelectedCats.push(catIds[i])
+        }
+        return IdsSelectedCats
+    }
+    catch(error) {
+        console.log("Error from getSelectedCatIds(catIds): " + error)
+    }
+}
+

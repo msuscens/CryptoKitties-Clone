@@ -19,6 +19,7 @@
 
   <link rel="stylesheet" href="assets/frontend/css/colors.css">
   <link rel="stylesheet" href="assets/frontend/css/factory.css">
+  <!-- *** TODO: Add markeplace's own css here!??? -->
   <link rel="stylesheet" href="assets/frontend/css/catpen.css">
   <link rel="stylesheet" href="assets/frontend/css/frontend.css">
 </head>
@@ -34,9 +35,9 @@
         </button>
         <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
           <div class="navbar-nav">
-            <a class="nav-item nav-link active" href="catPen.html">My Kitty-Pen <span class="sr-only">(current)</span></a>
+            <a class="nav-item nav-link" href="catPen.html">My Kitty-Pen</a>
             <a class="nav-item nav-link" href="factory.html">Kitty-Factory</a>
-            <a class="nav-item nav-link" href="marketplace.html">Kitty-Market</a>
+            <a class="nav-item nav-link active" href="marketplace.html">Kitty-Market<span class="sr-only">(current)</span></a>
           </div>
         </div>
     </nav>
@@ -44,47 +45,20 @@
     <!-- Main page header -->
     <div class="container p-1" style="margin-top: 2vh;margin-bottom: 6vh;">
         <div align="center">
-          <h1 class="c-white">My Kitty-Pen</h1>
-          <p class="c-white">(The Kitties that you own)</p>
+          <h1 class="c-white">The Kitty-Marketplace</h1>
+          <p class="c-white">(Kitties that you can buy)</p>
         </div>
         <div class="row">
-          <div class="col-lg-4 mt-1 ml-1">
+          <div class="col-lg-4 mt-1 ml-1"></div>
+          <div class="col mt-1 ml-1"></div>
+          <div class="col-lg-4 mt-1">
             <form>
               <div class="form-group row ml-1">
-                <button type="button" class="btn btn-primary mr-1" onclick="breeding()"
-                    aria-describedby="breedHelp">Breed kitties</button>
+                <button type="button" class="btn btn-success" onclick="buy()" 
+                    aria-describedby="buyHelp">Buy Kitty</button>
               </div>
-              <small id="breedHelp" class="form-text">Select two kitties, click Breed</small>
-              <p id="breedError"></p>
-          </div>
-
-          <div class="col-lg-4 mt-1 ml-1">
-            <form>
-              <div class="form-group row ml-1">
-                <button type="button" class="btn btn-primary mr-1" onclick="buying()" 
-                    aria-describedby="buyHelp">Buy a Kitty</button>
-              </div>
-              <small id="buyHelp" class="form-text">View kitties for sale</small>
+              <small id="buyHelp" class="form-text ml-2">Purchase selected kitty</small>
               <p id="buyError"></p>
-            </form>
-          </div>
-
-          <div class="col mt-1 ml-1">
-            <form>
-              <div class="form-group row ml-1">
-                <div class="col-sm-4">
-                  <label for="salePrice" class="col-form-label">Sale price (ETH)</label>
-                </div>
-                <div class="col-sm-4">
-                  <input type="text" class="form-control" id="salePrice" aria-describedby="sellHelp" value="0.5" placeholder="ETH">
-                </div>
-                <div class="col-sm-3">
-                  <button type="button" class="btn btn-primary mr-1"
-                  onclick="selling()">Advertise</button>
-                </div>
-                <small id="sellHelp" class="form-text">Select a kitty, enter a sale price, click Advertise</small>
-                <p id="sellError"></p>
-              </div>
             </form>
           </div>
 
@@ -94,12 +68,13 @@
         </div>
     </div>
     <footer align="left">
-        <p>Mark Suscens, March 2021</p>
+        <p>Mark Suscens, April 2021</p>
     </footer>
 
   </body>
 
-  <script src="assets/frontend/pageLogic/catPenLogic.js"></script>
+  <script src="assets/frontend/pageLogic/marketplaceLogic.js"></script>
+  <!-- <script src="assets/frontend/pageLogic/catPenLogic.js"></script> -->
   <script src="assets/frontend/pageLogic/sharedLogic.js"></script>
 
   <script src="assets/frontend/components/colors.js"></script>

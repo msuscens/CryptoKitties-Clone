@@ -12856,10 +12856,42 @@
       "links": {},
       "address": "0x69765dC87025B98dF47148140bDaC7214C80Fdd0",
       "transactionHash": "0xf4e77f8eb0df3ec1424d8212ce24c7fe30fd8f4cc0f97b38949b6c784a4e4c92"
+    },
+    "1617701043822": {
+      "events": {
+        "0xd99e4fad9ad6313b1feb588fa8e605e3a9873172f2024330c35dd2b4041a4386": {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": false,
+              "internalType": "string",
+              "name": "TxType",
+              "type": "string"
+            },
+            {
+              "indexed": false,
+              "internalType": "address",
+              "name": "owner",
+              "type": "address"
+            },
+            {
+              "indexed": false,
+              "internalType": "uint256",
+              "name": "tokenId",
+              "type": "uint256"
+            }
+          ],
+          "name": "MarketTransaction",
+          "type": "event"
+        }
+      },
+      "links": {},
+      "address": "0x933Ac90f693c32c4Ad6052bdeA826b24B7dB22b3",
+      "transactionHash": "0xe5d139bdfaf9b570092692a47003c00a2df5b5f55e95c9a5d719f6861d355d34"
     }
   },
   "schemaVersion": "3.2.0",
-  "updatedAt": "2021-04-05T17:42:02.260Z",
+  "updatedAt": "2021-04-06T09:24:25.241Z",
   "networkType": "ethereum",
   "devdoc": {
     "methods": {}

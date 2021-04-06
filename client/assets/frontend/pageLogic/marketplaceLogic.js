@@ -1,4 +1,6 @@
-let myCatIds = [];  // All the kitties (kitty ids) that a user owns
+let myCatIds = [];  // All the kitties (kitty ids) in the marketplace
+
+//let marketplaceCatIds = [];  // All the kitties (kitty ids) in the marketplace
 
 // When page loads
 $(document).ready(async function(){
@@ -6,12 +8,15 @@ $(document).ready(async function(){
     const connected = await initiateConnection()
     if (connected != true) console.log("Not connected to contract")
 
-    DisplayAllOwnedKities()
+    DisplayMarketplaceKitties()
 })
 
 
-function DisplayAllOwnedKities(){
+function DisplayMarketplaceKitties(){
     try {
+        // *** TODO ADD CODE HERE TO DISPLAY ALL KITTIES IN MARKET PLACE
+
+        // *** FOR NOW JUST DISPLAY ALL MY KITTIES AGAIN
         instance.methods.getAllYourKittyIds().call({}, function(err, myKittieIds){
             if (err) throw "Error from getAllYourKittyIds().call(): " + err
             myCatIds = myKittieIds  
@@ -41,9 +46,10 @@ function DisplayAllOwnedKities(){
                 })
             }
         })
+
     }
     catch(error){
-        console.log("In DisplayAllOwnedKities(): " + error)
+        console.log("In DisplayMarketplaceKitties(): " + error)
     }
 }
 
@@ -138,73 +144,33 @@ function getHtmlForKitty(id){
 }
 
 
-function breeding(){
-    try {
-        let catIds = getSelectedCatIds(myCatIds)
-
-        // Check two cats (and only 2) are selected
-        if (catIds.length < 2) {
-            $("#breedError").text("Use check boxes to select two kitties!")
-            $("#breedError").css({'color': 'red', 'font-weight': 'bold'})
-            return false
-        }
-        if (catIds.length > 2) {
-            $("#breedError").text("Too many kitties! Please select only two!")
-            $("#breedError").css({'color': 'red', 'font-weight': 'bold'})
-            return
-        } 
-        // remove any prior error mesage
-        $("#breedError").text("")
-        $("#breedError").css({'color': 'black', 'font-weight': 'normal'})
-        
-        // Go to the Breed page
-        window.location.href =
-            `breed.html?firstCatId=${catIds[0]}&secondCatId=${catIds[1]}`
-    }
-    catch(error){
-        console.log("Error from breeding(): " + error)
-    }
-}
-
-
-function selling(){
+function buy(){
     try {
         let catIds = getSelectedCatIds(myCatIds)
 
         // Check one cat (and only 1) is selected
         if (catIds.length < 1) {
-            $("#sellError").text("Use check boxes to select a kitty!")
-            $("#sellError").css({'color': 'red', 'font-weight': 'bold'})
+            $("#buyError").text("Use check boxes to select a kitty!")
+            $("#buyError").css({'color': 'red', 'font-weight': 'bold'})
             return false
         }
         if (catIds.length > 1) {
-            $("#sellError").text("Too many kitties! Please select only one!")
-            $("#sellError").css({'color': 'red', 'font-weight': 'bold'})
-            return
+            $("#buyError").text("Too many kitties! Please select only one!")
+            $("#buyError").css({'color': 'red', 'font-weight': 'bold'})
+            return false
         } 
         // remove any prior error mesage
-        $("#sellError").text("")
-        $("#sellError").css({'color': 'black', 'font-weight': 'normal'})
+        $("#buyError").text("")
+        $("#buyError").css({'color': 'black', 'font-weight': 'normal'})
         
-        // Create a sell market order 
-        // *** TODO - DO IT HERE   ***
+        // Buy the selected kittie
+        // *** TODO: ADD BUY CODE HERE *****
 
-        // Report to user that kitties is now for sale in marketplae
-
-        // Update kitty (in kitty pen) with a for sale notice
+        // Notify user that kittie has been bought
+        // (Catch buy event)
 
     }
     catch(error){
-        console.log("Error from selling(): " + error)
-    }
-}
-
-function buying(){
-    try {
-        // Go to the Market page
-        window.location.href = `marketplace.html`
-    }
-    catch(error){
-        console.log("Error from buying(): " + error)
+        console.log("Error from buy(): " + error)
     }
 }
