@@ -5,7 +5,7 @@ $(document).ready(async function(){
     if (connected != true) console.log("Not connected to contract")
 
     getDefaultKittie()
-    reportOnBirthEvent()
+    reportOnBirthEvent(instanceOfKittyContract)
 })
 
 
@@ -40,7 +40,7 @@ function getRandomKittie() {
         "lastNum" :  getRandomIntegerBetween(0, 9)
       }
     }
-    
+
     render(randomCat)
     updateSliders(randomCat.dna)
   }
@@ -54,7 +54,7 @@ function getRandomKittie() {
 function createKittie(){
   try {
     const dna = getDna()
-    instance.methods.createKittyGen0(dna).send({}, function(err, txHash){
+    instanceOfKittyContract.methods.createKittyGen0(dna).send({}, function(err, txHash){
         if (err) console.log(err)
         else console.log(txHash)
     })

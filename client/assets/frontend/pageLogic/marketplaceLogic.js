@@ -1,6 +1,5 @@
-let myCatIds = [];  // All the kitties (kitty ids) in the marketplace
 
-//let marketplaceCatIds = [];  // All the kitties (kitty ids) in the marketplace
+let marketplaceCatIds = [];  // All kitties (kitty ids) for sale in the marketplace
 
 // When page loads
 $(document).ready(async function(){
@@ -8,45 +7,18 @@ $(document).ready(async function(){
     const connected = await initiateConnection()
     if (connected != true) console.log("Not connected to contract")
 
-    DisplayMarketplaceKitties()
+    DisplayMarketplaceKitties(instanceOfMarketplace, instanceOfKittyContract)
+
 })
 
 
-function DisplayMarketplaceKitties(){
+function DisplayMarketplaceKitties(instMarketplace, instKittyContract){
     try {
-        // *** TODO ADD CODE HERE TO DISPLAY ALL KITTIES IN MARKET PLACE
-
-        // *** FOR NOW JUST DISPLAY ALL MY KITTIES AGAIN
-        instance.methods.getAllYourKittyIds().call({}, function(err, myKittieIds){
-            if (err) throw "Error from getAllYourKittyIds().call(): " + err
-            myCatIds = myKittieIds  
-
-            for (let i = 0; i < myKittieIds.length; i++) {
-                // Get the cat's details
-                const cat = {
-                    id: myKittieIds[i],
-                    dna: undefined,
-                    gen: undefined
-                }
-                instance.methods.getKitty(cat.id).call({}, function(errMsg, kitty){
-                    if (errMsg) throw "Error from getKitty(cat.id).call(): " + errMsg
-
-                    //Put the cat on the page (displayed according to its dna)
-                    let htmlKitty = getHtmlForKitty(cat.id) 
-                    $('#rowOfCats').append(htmlKitty)
-                    cat.dna = getKittyDna(kitty.genes)
-                    cat.gen = kitty.generation
-                    render(cat, `#kitty${cat.id}`)
-
-                    // Enable click event on cat to toggle cat selection (check box)
-                    const catElement = document.getElementById(`kitty${cat.id}`) 
-                    catElement.addEventListener("click", function(){
-                        toggleCheckBox(`#CheckBoxCat-${cat.id}`)
-                    }, false)
-                })
-            }
+        instMarketplace.methods.getAllTokenOnSale().call({}, function(err, idsTokensOnSale){
+            if (err) throw "Error from getAllTokenOnSale().call(): " + err
+            putCatsOnPage(idsTokensOnSale, instKittyContract)
+            marketplaceCatIds = idsTokensOnSale  
         })
-
     }
     catch(error){
         console.log("In DisplayMarketplaceKitties(): " + error)
@@ -54,117 +26,15 @@ function DisplayMarketplaceKitties(){
 }
 
 
-function getHtmlForKitty(id){
-    try {
-        let html = `
-          <div class="col-lg-4">
-          <div id="kitty${id}" class="catBox m-2 light-b-shadow">
-
-            <div class="catCheckBox custom-control custom-checkbox checkbox-xl">
-                <input type="checkbox" class="custom-control-input" id="CheckBoxCat-${id}">
-                <label class="custom-control-label" for="CheckBoxCat-${id}"></label>
-            </div>
-        
-            <div id="cat" class="cat">
-                <div class="cat__ear">
-                    <div id="leftEar" class="cat__ear--left">
-                        <div class="cat__ear--left-inside"></div>
-                    </div>
-                    <div id="rightEar" class="cat__ear--right">
-                        <div class="cat__ear--right-inside"></div>
-                    </div>
-                </div>
-
-                <div id="head" class="cat__head">
-                    <div id="midDot" class="cat__head-dots">
-                        <div id="leftDot" class="cat__head-dots_first"></div>
-                        <div id="rightDot" class="cat__head-dots_second"></div>
-                    </div>
-                    <div id="eyes" class="cat__eye">
-                        <div class="cat__eye--left">
-                            <span class="pupil-left"></span>
-                        </div>
-                        <div class="cat__eye--right">
-                            <span class="pupil-right"></span>
-                        </div>
-                    </div>
-                    <div id="nose" class="cat__nose"></div>
-
-                    <div class="cat__mouth-contour"></div>
-                    <div class="cat__mouth-left"></div>
-                    <div class="cat__mouth-right"></div>
-
-                    <div id="leftWhiskers" class="cat__whiskers-left"></div>
-                    <div id="rightWhiskers" class="cat__whiskers-right"></div>
-                </div>
-
-                <div class="cat__body">
-
-                    <div class="cat__chest"></div>
-                    <div class="cat__chest_inner"></div>
-
-                    <div id="leftRearPaw" class="cat__paw-left_rear"></div>
-                    <div id="leftFrontPaw" class="cat__paw-left_front"></div>
-
-                    <div id="rightFrontPaw" class="cat__paw-right_front"></div>
-                    <div id="rightRearPaw" class="cat__paw-right_rear"></div>
-
-                    <div id="tail" class="cat__tail"></div>
-                </div>
-            </div>
-            <br>
-            <div class="genDiv">
-                <p><b>GEN: <span id="catGenNum">0</span></b></p>
-            </div>
-            <div class="dnaDiv" id="catDNA">
-                <b>
-                    DNA:
-                    <!-- Colors -->
-                    <span id="dnabody"></span>
-                    <span id="dnamouth"></span>
-                    <span id="dnaeyes"></span>
-                    <span id="dnaears"></span>
-                    
-                    <!-- Cattributes -->
-                    <span id="dnashape"></span>
-                    <span id="dnadecoration"></span>
-                    <span id="dnadecorationMid"></span>
-                    <span id="dnadecorationSides"></span>
-                    <span id="dnaanimation"></span>
-                    <span id="dnaspecial"></span>
-                </b>
-            </div>
-          </div>
-          </div>`
-        return(html)
-    }
-    catch (error) {
-        console.log("In getHtmlForKitty(id): " + error)
-    }
-}
-
-
 function buy(){
     try {
-        let catIds = getSelectedCatIds(myCatIds)
+        // Validate 1 cat is selected
+        let catIds = getSelectedCatIds(marketplaceCatIds)
+        if (!isNumberOfKitties(1, catIds.length, "buyError")) return
 
-        // Check one cat (and only 1) is selected
-        if (catIds.length < 1) {
-            $("#buyError").text("Use check boxes to select a kitty!")
-            $("#buyError").css({'color': 'red', 'font-weight': 'bold'})
-            return false
-        }
-        if (catIds.length > 1) {
-            $("#buyError").text("Too many kitties! Please select only one!")
-            $("#buyError").css({'color': 'red', 'font-weight': 'bold'})
-            return false
-        } 
-        // remove any prior error mesage
-        $("#buyError").text("")
-        $("#buyError").css({'color': 'black', 'font-weight': 'normal'})
-        
         // Buy the selected kittie
         // *** TODO: ADD BUY CODE HERE *****
+        console.log("TODO - *** Buy the selected kitty ***")
 
         // Notify user that kittie has been bought
         // (Catch buy event)

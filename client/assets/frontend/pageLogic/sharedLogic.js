@@ -24,7 +24,97 @@ function getKittyDna(genes){
 }
 
 
-function reportOnBirthEvent() {
+function getHtmlForKitty(id){
+    try {
+        let html = `
+          <div class="col-lg-4">
+          <div id="kitty${id}" class="catBox m-2 light-b-shadow">
+
+            <div class="catCheckBox custom-control custom-checkbox checkbox-xl">
+                <input type="checkbox" class="custom-control-input" id="CheckBoxCat-${id}">
+                <label class="custom-control-label" for="CheckBoxCat-${id}"></label>
+            </div>
+        
+            <div id="cat" class="cat">
+                <div class="cat__ear">
+                    <div id="leftEar" class="cat__ear--left">
+                        <div class="cat__ear--left-inside"></div>
+                    </div>
+                    <div id="rightEar" class="cat__ear--right">
+                        <div class="cat__ear--right-inside"></div>
+                    </div>
+                </div>
+
+                <div id="head" class="cat__head">
+                    <div id="midDot" class="cat__head-dots">
+                        <div id="leftDot" class="cat__head-dots_first"></div>
+                        <div id="rightDot" class="cat__head-dots_second"></div>
+                    </div>
+                    <div id="eyes" class="cat__eye">
+                        <div class="cat__eye--left">
+                            <span class="pupil-left"></span>
+                        </div>
+                        <div class="cat__eye--right">
+                            <span class="pupil-right"></span>
+                        </div>
+                    </div>
+                    <div id="nose" class="cat__nose"></div>
+
+                    <div class="cat__mouth-contour"></div>
+                    <div class="cat__mouth-left"></div>
+                    <div class="cat__mouth-right"></div>
+
+                    <div id="leftWhiskers" class="cat__whiskers-left"></div>
+                    <div id="rightWhiskers" class="cat__whiskers-right"></div>
+                </div>
+
+                <div class="cat__body">
+
+                    <div class="cat__chest"></div>
+                    <div class="cat__chest_inner"></div>
+
+                    <div id="leftRearPaw" class="cat__paw-left_rear"></div>
+                    <div id="leftFrontPaw" class="cat__paw-left_front"></div>
+
+                    <div id="rightFrontPaw" class="cat__paw-right_front"></div>
+                    <div id="rightRearPaw" class="cat__paw-right_rear"></div>
+
+                    <div id="tail" class="cat__tail"></div>
+                </div>
+            </div>
+            <br>
+            <div class="genDiv">
+                <p><b>GEN: <span id="catGenNum">0</span></b></p>
+            </div>
+            <div class="dnaDiv" id="catDNA">
+                <b>
+                    DNA:
+                    <!-- Colors -->
+                    <span id="dnabody"></span>
+                    <span id="dnamouth"></span>
+                    <span id="dnaeyes"></span>
+                    <span id="dnaears"></span>
+                    
+                    <!-- Cattributes -->
+                    <span id="dnashape"></span>
+                    <span id="dnadecoration"></span>
+                    <span id="dnadecorationMid"></span>
+                    <span id="dnadecorationSides"></span>
+                    <span id="dnaanimation"></span>
+                    <span id="dnaspecial"></span>
+                </b>
+            </div>
+          </div>
+          </div>`
+        return(html)
+    }
+    catch (error) {
+        console.log("In getHtmlForKitty(id): " + error)
+    }
+}
+
+
+function reportOnBirthEvent(instance) {
     // instance.events.Birth({}, function(error, event){ console.log(event) })
     instance.events.Birth().on('data', function(event){
         const owner = event.returnValues.owner
@@ -49,13 +139,29 @@ function reportOnBirthEvent() {
 }
 
 
-// *** TODO - MOVE INTO SHARED CODE - SHARED WITH KITTY PEN (SO REMOVE ALSO FROM KITTY PEN LOGIC JS FILE)
+function reportOnTransactionEvent(instance) {
+    // instance.events.Birth({}, function(error, event){ console.log(event) })
+    instance.events.MarketTransaction().on('data', function(event){
+        const txType = event.returnValues.TxType
+        const owner = event.returnValues.owner
+        const tokenId = event.returnValues.tokenId
+        $("#kittyTransaction").css("display", "block")
+        $("#kittyTransaction").text("New market event: " + txType + 
+                                "\nKitty ID:" + tokenId + " Owner:" + owner)
+    })
+    .on('error', function(error, receipt) {
+        console.log("Market Transaction Event Error")
+        console.log(error)
+        console.log(receipt)
+    })
+}
+
+
 function toggleCheckBox(id){
     $(id).prop("checked") ? $(id).prop("checked", false) : $(id).prop("checked",true)
 }
 
 
-// *** TODO - MOVE INTO SHARED CODE - SHARED WITH KITTY PEN (SO REMOVE ALSO FROM KITTY PEN LOGIC JS FILE)
 function getSelectedCatIds(catIds){
     try {
         let IdsSelectedCats = []
@@ -68,6 +174,60 @@ function getSelectedCatIds(catIds){
     }
     catch(error) {
         console.log("Error from getSelectedCatIds(catIds): " + error)
+    }
+}
+
+function isNumberOfKitties(numRequired, numSelected, idErrorElement) {
+    const kittyWord = (numRequired == 1)? "kitty" : "kitties"
+
+    if (numSelected < numRequired) {
+        $("#"+idErrorElement).text(`Use checkboxes to select ${numRequired} ${kittyWord}!`)
+        $("#"+idErrorElement).css({'color': 'red', 'font-weight': 'bold'})
+        return false
+    }
+    if (numSelected > numRequired) {
+        $("#"+idErrorElement).text(`Too many! Please select only ${numRequired} ${kittyWord}!`)
+        $("#"+idErrorElement).css({'color': 'red', 'font-weight': 'bold'})
+        return false
+    }
+    // Correct number selected
+    clearErrorMessage(idErrorElement)
+    return true
+}
+
+
+function clearErrorMessage(idErrorElement) {
+    $("#"+idErrorElement).text("")
+    $("#"+idErrorElement).css({'color': 'black', 'font-weight': 'normal'})
+}
+
+
+
+function putCatsOnPage(catIds, instKittyContract) {
+
+    for (let i = 0; i < catIds.length; i++) {
+        // Get the cat's details
+        const cat = {
+            id: catIds[i],
+            dna: undefined,
+            gen: undefined
+        }
+        instKittyContract.methods.getKitty(cat.id).call({}, function(errMsg, kitty){
+            if (errMsg) throw "Error from getKitty(cat.id).call(): " + errMsg
+
+            //Put the cat on the page (displayed according to its dna)
+            let htmlKitty = getHtmlForKitty(cat.id) 
+            $('#rowOfCats').append(htmlKitty)
+            cat.dna = getKittyDna(kitty.genes)
+            cat.gen = kitty.generation
+            render(cat, `#kitty${cat.id}`)
+
+            // Enable click event on cat to toggle cat selection (check box)
+            const catElement = document.getElementById(`kitty${cat.id}`) 
+            catElement.addEventListener("click", function(){
+                toggleCheckBox(`#CheckBoxCat-${cat.id}`)
+            }, false)
+        })
     }
 }
 

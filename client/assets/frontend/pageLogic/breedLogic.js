@@ -18,7 +18,13 @@ $(document).ready(async function(){
     const connected = await initiateConnection()
     if (connected != true) console.log("Not connected to contract")
 
-    // Display mum and dad Kiities on the page
+    displayMumandDad(instanceOfKittyContract, parents)
+
+    reportOnBirthEvent(instanceOfKittyContract)
+})
+
+
+function displayMumandDad(instance, parents) {
     instance.methods.getKitty(parents.mum.id).call({}, function(errMsg, kitty){
         if (errMsg) throw "Error from getKitty(parents.mum.id).call(): " + errMsg
         parents.mum.dna = getKittyDna(kitty.genes)
@@ -31,9 +37,7 @@ $(document).ready(async function(){
         parents.dad.gen = kitty.generation
         render(parents.dad, "#tom")
     })
-
-    reportOnBirthEvent()
-})
+}
 
 
 function swapCats(){
@@ -55,7 +59,7 @@ function swapCats(){
 
 function breed(){
     try {
-        instance.methods.breed(parents.mum.id, parents.dad.id).send({}, function(err, txHash){
+        instanceOfKittyContract.methods.breed(parents.mum.id, parents.dad.id).send({}, function(err, txHash){
             if (err) console.log(err)
             else console.log(txHash)
         })

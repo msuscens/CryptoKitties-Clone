@@ -1,7 +1,8 @@
 Assignement Week 9 Day 5: Marketplace Frontend Assignment
 - Create a marketplace page that shows all cats for sale
+- Allow a user to put up for sale (his own) cat(s), which will be shown in the marketplace
 - Allow user to purchase cats from the marketplace
-- Allow the user to place their own cats up for sale (which should then appear in the marketplace).
+- Allow user to remove from sale any of his unsold cats (that are listed in the marketplace).
 
 Assignement Week 9 Day 4: Implement a backend Kitty Marketplace Contract
  - Download the interface IKittyMarketPlace'.sol (from the download section on the right). Extract the zip file to get the .sol file and add it to your project.

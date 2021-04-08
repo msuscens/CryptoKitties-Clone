@@ -76,7 +76,8 @@
                   <label for="salePrice" class="col-form-label">Sale price (ETH)</label>
                 </div>
                 <div class="col-sm-4">
-                  <input type="text" class="form-control" id="salePrice" aria-describedby="sellHelp" value="0.5" placeholder="ETH">
+                  <input id="salePrice" type="text" class="form-control"
+                     aria-describedby="sellHelp" value="0.5" placeholder="ETH">
                 </div>
                 <div class="col-sm-3">
                   <button type="button" class="btn btn-primary mr-1"
@@ -84,6 +85,7 @@
                 </div>
                 <small id="sellHelp" class="form-text">Select a kitty, enter a sale price, click Advertise</small>
                 <p id="sellError"></p>
+                <div id="kittyTransaction" class="alert alert-sucess" role="alert" style="display:none"></div>
               </div>
             </form>
           </div>
