@@ -7,18 +7,25 @@ $(document).ready(async function(){
     const connected = await initiateConnection()
     if (connected != true) console.log("Not connected to contract")
 
-    DisplayMarketplaceKitties(instanceOfMarketplace, instanceOfKittyContract)
+    // await DisplayMarketplaceKitties()
+    DisplayMarketplaceKitties()
+
+    // Register for event reporting
+    // *** TODO - Do it here ***
+    reportOnTransactionEvent(displayTransaction)
 
 })
 
 
-function DisplayMarketplaceKitties(instMarketplace, instKittyContract){
+async function DisplayMarketplaceKitties(){
     try {
-        instMarketplace.methods.getAllTokenOnSale().call({}, function(err, idsTokensOnSale){
-            if (err) throw "Error from getAllTokenOnSale().call(): " + err
-            putCatsOnPage(idsTokensOnSale, instKittyContract)
-            marketplaceCatIds = idsTokensOnSale  
-        })
+        const catIds = await getAllCatIdsOnSale()
+        const catsOnSale = await getDetailsOfAllCatsForSale(catIds)
+
+        putAllCatsOnPage(catsOnSale)
+
+        marketplaceCatIds = catIds
+        // TODO : *** Also store full details ie. catsOnSale ??  
     }
     catch(error){
         console.log("In DisplayMarketplaceKitties(): " + error)
@@ -37,7 +44,7 @@ function buy(){
         console.log("TODO - *** Buy the selected kitty ***")
 
         // Notify user that kittie has been bought
-        // (Catch buy event)
+        // ie. Make sure that sc event is handled correctly...
 
     }
     catch(error){

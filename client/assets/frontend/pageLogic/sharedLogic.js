@@ -1,5 +1,3 @@
-       
-
 function getKittyDna(genes){
     try {
         if (genes.length != 16) throw `genes string ('${genes}') should be 16 characters (not ${genes.length})`
@@ -29,6 +27,14 @@ function getHtmlForKitty(id){
         let html = `
           <div class="col-lg-4">
           <div id="kitty${id}" class="catBox m-2 light-b-shadow">
+
+            <div class="priceDiv">
+                <span id="catPrice"></span>
+            </div>
+
+            <div class="statusDiv">
+                <span id="catStatus"></span>
+            </div>
 
             <div class="catCheckBox custom-control custom-checkbox checkbox-xl">
                 <input type="checkbox" class="custom-control-input" id="CheckBoxCat-${id}">
@@ -84,7 +90,7 @@ function getHtmlForKitty(id){
             </div>
             <br>
             <div class="genDiv">
-                <p><b>GEN: <span id="catGenNum">0</span></b></p>
+                <p><b>GEN: <span id="catGenNum"></span></b></p>
             </div>
             <div class="dnaDiv" id="catDNA">
                 <b>
@@ -111,49 +117,6 @@ function getHtmlForKitty(id){
     catch (error) {
         console.log("In getHtmlForKitty(id): " + error)
     }
-}
-
-
-function reportOnBirthEvent(instance) {
-    // instance.events.Birth({}, function(error, event){ console.log(event) })
-    instance.events.Birth().on('data', function(event){
-        const owner = event.returnValues.owner
-        const kittenId = event.returnValues.kittenId
-        const mumId = event.returnValues.mumId
-        const dadId = event.returnValues.dadId
-        const genes = event.returnValues.genes
-        const generation = event.returnValues.generation
-        $("#kittyCreation").css("display", "block")
-        $("#kittyCreation").text("A new kitty is born!  Kitty ID:" + kittenId +
-                                "\nGenes:" + genes +
-                                "\nMum's ID:" + mumId +
-                                " Dad's ID:" + dadId +
-                                " Generation:" + generation +
-                                "\nOwner:" + owner)
-    })
-    .on('error', function(error, receipt) {
-        console.log("Birth Event Error")
-        console.log(error)
-        console.log(receipt)
-    })
-}
-
-
-function reportOnTransactionEvent(instance) {
-    // instance.events.Birth({}, function(error, event){ console.log(event) })
-    instance.events.MarketTransaction().on('data', function(event){
-        const txType = event.returnValues.TxType
-        const owner = event.returnValues.owner
-        const tokenId = event.returnValues.tokenId
-        $("#kittyTransaction").css("display", "block")
-        $("#kittyTransaction").text("New market event: " + txType + 
-                                "\nKitty ID:" + tokenId + " Owner:" + owner)
-    })
-    .on('error', function(error, receipt) {
-        console.log("Market Transaction Event Error")
-        console.log(error)
-        console.log(receipt)
-    })
 }
 
 
@@ -202,32 +165,48 @@ function clearErrorMessage(idErrorElement) {
 }
 
 
+function putAllCatsOnPage(cats) {
+    for (let i = 0; i < cats.length; i++) {
+        const catId = cats[i].id
+        const htmlKitty = getHtmlForKitty(catId) 
+        $('#rowOfCats').append(htmlKitty)
+        render(cats[i], `#kitty${catId}`)
 
-function putCatsOnPage(catIds, instKittyContract) {
-
-    for (let i = 0; i < catIds.length; i++) {
-        // Get the cat's details
-        const cat = {
-            id: catIds[i],
-            dna: undefined,
-            gen: undefined
-        }
-        instKittyContract.methods.getKitty(cat.id).call({}, function(errMsg, kitty){
-            if (errMsg) throw "Error from getKitty(cat.id).call(): " + errMsg
-
-            //Put the cat on the page (displayed according to its dna)
-            let htmlKitty = getHtmlForKitty(cat.id) 
-            $('#rowOfCats').append(htmlKitty)
-            cat.dna = getKittyDna(kitty.genes)
-            cat.gen = kitty.generation
-            render(cat, `#kitty${cat.id}`)
-
-            // Enable click event on cat to toggle cat selection (check box)
-            const catElement = document.getElementById(`kitty${cat.id}`) 
-            catElement.addEventListener("click", function(){
-                toggleCheckBox(`#CheckBoxCat-${cat.id}`)
-            }, false)
-        })
+        // Enable cat selection (toggle) on click
+        const catElement = document.getElementById(`kitty${catId}`) 
+        catElement.addEventListener("click", function(){
+            toggleCheckBox(`#CheckBoxCat-${catId}`)
+        }, false)
     }
 }
 
+
+// Event Handlers - invoked by Smart Contract interface (upon a SC event)
+
+function displayBirth(newborn) {
+    try {
+        $("#kittyCreation").css("display", "block")
+        $("#kittyCreation").text("A new kitty is born!  Kitty ID:" + newborn.kittenId +
+                                "\nGenes:" + newborn.genes +
+                                "\nMum's ID:" + newborn.mumId +
+                                " Dad's ID:" + newborn.dadId +
+                                " Generation:" + newborn.generation +
+                                "\nOwner:" + newborn.owner)
+    }
+    catch (error) {
+        console.log("Error from displayBirthEvent(newborn): " + error)
+
+    }
+}
+
+
+function displayTransaction(newTx){
+    try {
+        $("#kittyTransaction").css("display", "block")
+        $("#kittyTransaction").text("New market event: " + newTx.TxType + 
+            "\nKitty ID:" + newTx.tokenId + " Owner:" + newTx.owner)
+    }
+    catch (error) {
+        console.log("Error from displayTransaction(): " + error)
+    }
+}

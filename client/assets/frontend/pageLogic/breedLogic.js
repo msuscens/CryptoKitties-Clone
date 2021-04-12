@@ -18,25 +18,26 @@ $(document).ready(async function(){
     const connected = await initiateConnection()
     if (connected != true) console.log("Not connected to contract")
 
-    displayMumandDad(instanceOfKittyContract, parents)
-
-    reportOnBirthEvent(instanceOfKittyContract)
+    displayMumandDad(parents)
+    reportOnBirthEvent(displayBirth)
 })
 
 
-function displayMumandDad(instance, parents) {
-    instance.methods.getKitty(parents.mum.id).call({}, function(errMsg, kitty){
-        if (errMsg) throw "Error from getKitty(parents.mum.id).call(): " + errMsg
-        parents.mum.dna = getKittyDna(kitty.genes)
-        parents.mum.gen = kitty.generation
+async function displayMumandDad(parents) {
+    try {
+        const mumCat = await getCatDetails(parents.mum.id)
+        parents.mum.dna = mumCat.dna
+        parents.mum.gen = mumCat.gen
         render(parents.mum, "#queen")
-    })
-    instance.methods.getKitty(parents.dad.id).call({}, function(errMsg, kitty){
-        if (errMsg) throw "Error from getKitty(parents.dad.id).call(): " + errMsg
-        parents.dad.dna = getKittyDna(kitty.genes)
-        parents.dad.gen = kitty.generation
+
+        const dadCat = await getCatDetails(parents.dad.id)
+        parents.dad.dna = dadCat.dna
+        parents.dad.gen = dadCat.gen
         render(parents.dad, "#tom")
-    })
+    }
+    catch (error) {
+        console.log("Error from displayMumandDad(parents): " + error)
+    }
 }
 
 
@@ -50,20 +51,21 @@ function swapCats(){
         //Update the display (to show cats with their new roles)
         render(parents.mum, "#queen")
         render(parents.dad, "#tom")
-
-    } catch (error) {
+    }
+    catch (error) {
         console.log("Error from swapCats(): " + error)
     }
 }
 
 
-function breed(){
+async function breed(){
     try {
-        instanceOfKittyContract.methods.breed(parents.mum.id, parents.dad.id).send({}, function(err, txHash){
-            if (err) console.log(err)
-            else console.log(txHash)
-        })
-    } catch (error) {
+        // *** Question: I assume I don't want to wait for anything that sets values in blockchain SC (otherwise it'll bock UI)! ???? 
+        // *** Discuss with Kenneth ***
+        breedCats(parents.mum.id, parents.dad.id)
+        // await breedCats(parents.mum.id, parents.dad.id)
+    }
+    catch (error) {
         console.log("Error from breed(): " + error)
     }
 }

@@ -35,11 +35,17 @@ function render(cat, idCat=""){
     outerDecorationColor(cat.dna.decorationSidesColor, idCat)
     animationVariation(cat.dna.animation, idCat)
 
-    // Update Special DNA digit  
+    // Display Special DNA digit  
     $(`${idCat} #dnaspecial`).html(cat.dna.lastNum) // Update DNA display (below cat)
 
-    // Update Generation field
+    // Display Cats' Generation
     $(`${idCat}`).find('#catGenNum').html(cat.gen)
+
+    // Display Cats' Price
+    $(`${idCat}`).find('#catPrice').html(cat.price)
+
+    // Display Cats' status
+    $(`${idCat}`).find('#catStatus').html(cat.status)
 
   }
   catch (error){
