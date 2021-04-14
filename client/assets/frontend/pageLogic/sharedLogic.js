@@ -26,7 +26,7 @@ function getHtmlForKitty(id){
     try {
         let html = `
           <div class="col-lg-4">
-          <div id="kitty${id}" class="catBox m-2 light-b-shadow">
+          <div id="kitty${id}" class="catBoxLarger mt-4 light-b-shadow">
 
             <div class="priceDiv">
                 <span id="catPrice"></span>
@@ -200,6 +200,34 @@ function displayBirth(newborn) {
 }
 
 
+function processTransactionEvent(newTx){
+    try {
+        switch (newTx.TxType) {
+            case "Create offer":
+                console.log("In processTransactionEvent(newTx): 'Create offer'")
+                displayTransaction(newTx)
+                // updateDisplayedKitty(newTx)
+                break
+            case "Buy":
+                console.log("In processTransactionEvent(newTx): 'Buy'")
+                displayTransaction(newTx)
+                removeDisplayedKitty(newTx)
+                break
+            case "Remove offer":
+                console.log("In processTransactionEvent(newTx): 'Remove offer'")
+                displayTransaction(newTx)
+                removeDisplayedKitty(newTx)
+                break
+            default:
+                throw new Error("Unknown tx value: "+newTx.TxType)
+        }
+    }
+    catch (error) {
+        console.log("Error from processTransactionEvent(newTx): " + error)
+    }
+}
+
+
 function displayTransaction(newTx){
     try {
         $("#kittyTransaction").css("display", "block")
@@ -208,5 +236,15 @@ function displayTransaction(newTx){
     }
     catch (error) {
         console.log("Error from displayTransaction(): " + error)
+    }
+}
+
+
+function removeDisplayedKitty(newTx){
+    try {
+        console.log("In removeDisplayedKitty(newTx): **** To be implemented **** ")
+    }
+    catch (error) {
+        console.log("Error from removeDisplayedKitty(newTx): " + error)
     }
 }

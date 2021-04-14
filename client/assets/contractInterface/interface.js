@@ -7,7 +7,7 @@ const MARKETPLACE_ADDRESS = "0x933Ac90f693c32c4Ad6052bdeA826b24B7dB22b3"
 
 let Instance_Of_KittyContract
 let Instance_Of_Marketplace
-let user
+let User
 
 async function initiateConnection(){
     try {
@@ -20,16 +20,27 @@ async function initiateConnection(){
         let accounts = await window.ethereum.enable()
         Instance_Of_KittyContract = new web3.eth.Contract(abi.kittyContract, KITTY_CONTRACT_ADDRESS, {from: accounts[0]})
         Instance_Of_Marketplace = new web3.eth.Contract(abi.marketplace, MARKETPLACE_ADDRESS, {from: accounts[0]})
-        user = accounts[0]
+        User = accounts[0]
 
-        if (user.length > 0) {
-            console.log("Connected with account :" + user)
+        if (User.length > 0) {
+            console.log("Connected with account :" + User)
             return true
         }
     }
     catch (err) {
          console.log("Error from initiateConnection(): " + err)
          return false
+    }
+}
+
+
+function isUser(address) {
+    try {
+        if (String(address).toLowerCase() !== String(User).toLowerCase()) return false
+        return true
+    }
+    catch (err) {
+        console.log("Error from isUser(address): " + err)
     }
 }
 
@@ -182,52 +193,28 @@ async function getDetailsOfAllCatsForSale(catIds) {
 
 async function getForSaleDetails(catId) {
     try {
-        const ForSaleDetails = {
+        const forSaleDetails = {
             id: undefined,
             sellerAddress: undefined,
-            price: undefined,
-            active: undefined
+            priceInWei: undefined,
+            active: undefined,
+            price: undefined
         }
          
-        // *** TODO - refactor following once Markeplace contract's getOffer function returns values in variable nemes (TBD)
         await Instance_Of_Marketplace.methods.getOffer(catId).call({}, function(errMsg, offer){
             if (errMsg) throw "Error from getOffer(catId).call(): " + errMsg
-            console.log(offer)
-            console.log(offer[0])
-            console.log(offer[1])
-            console.log(offer[2])
-            console.log(offer[3])
-            console.log(offer[4])
+            if (catId != offer.tokenId ) throw "Internal error - tokenId returned by getOffer(catId) doesn't match catId!?"
 
-            // _tokenIdToOffer[tokenId].seller,
-            // _tokenIdToOffer[tokenId].price,
-            // _tokenIdToOffer[tokenId].index,
-            // _tokenIdToOffer[tokenId].tokenId,
-            // _tokenIdToOffer[tokenId].active
+            forSaleDetails.id = offer.tokenId
+            forSaleDetails.sellerAddress = offer.seller
+            forSaleDetails.priceInWei = offer.price
+            forSaleDetails.active = offer.active
 
-            if (catId !== offer[3] ) throw "Internal error - tokenId returned by getOffer(catId) doesn't match catId!?"
-            ForSaleDetails.id = offer[3]
-            ForSaleDetails.sellerAddress = offer[0]
-            ForSaleDetails.price = offer[1]
-            ForSaleDetails.active = offer[4]
-
-            // console.log("catId:")
-            // console.log(catId)
-            // console.log(offer.tokenId)
-            // console.log(offer.seller)
-            // console.log(offer.price)
-            // console.log(offer.active)
-            // console.log(offer.index)
-
-            // if (parseInt(catId)!= offer.tokenId ) throw "Internal error - tokenId returned by getOffer(catId) doesn't match catId!?"
-            // ForSaleDetails.id = offer.tokenId
-            // ForSaleDetails.sellerAddress = offer.seller
-            // ForSaleDetails.price = offer.price
-            // ForSaleDetails.active = offer.active
-
-            console.log(ForSaleDetails)
+            // Convert wei price to ether
+            forSaleDetails.price = web3.utils.fromWei(offer.price, 'ether')
         })
-        return ForSaleDetails
+
+        return forSaleDetails
     }
     catch (error) {
         console.log("Error from getForSaleDetails(catId): " + error)    
@@ -275,5 +262,24 @@ async function setForSale(catId, salePriceInWei) {
     }
     catch (err) {
         console.log("Error from setForSale(catId, salePriceInWei): " + err)
+    }
+}
+
+
+async function buyKitty(tokenId, priceInWei) {
+    try {
+        // const amount = web3.utils.toWei(price, "ether")
+        await Instance_Of_Marketplace.methods.buyKitty(tokenId).send({value: priceInWei}, function(err, txHash){
+            if (err) {
+                throw(err)
+            }
+            else {
+                console.log(txHash)
+                // return txHash;
+            }
+        })
+    }
+    catch (err) {
+        console.log("Error from buyKitty(tokenId): " + err)
     }
 }

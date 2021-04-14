@@ -616,7 +616,7 @@ const abi = {
       "inputs": [
         {
           "internalType": "uint256",
-          "name": "tokenId",
+          "name": "idOfToken",
           "type": "uint256"
         }
       ],
@@ -624,27 +624,27 @@ const abi = {
       "outputs": [
         {
           "internalType": "address",
-          "name": "",
+          "name": "seller",
           "type": "address"
         },
         {
           "internalType": "uint256",
-          "name": "",
+          "name": "price",
           "type": "uint256"
         },
         {
           "internalType": "uint256",
-          "name": "",
+          "name": "index",
           "type": "uint256"
         },
         {
           "internalType": "uint256",
-          "name": "",
+          "name": "tokenId",
           "type": "uint256"
         },
         {
           "internalType": "bool",
-          "name": "",
+          "name": "active",
           "type": "bool"
         }
       ],
@@ -716,6 +716,6 @@ const abi = {
       "payable": true,
       "stateMutability": "payable",
       "type": "function"
-    }    
+    }
   ]
 }

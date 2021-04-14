@@ -41,11 +41,11 @@ function render(cat, idCat=""){
     // Display Cats' Generation
     $(`${idCat}`).find('#catGenNum').html(cat.gen)
 
-    // Display Cats' Price
-    $(`${idCat}`).find('#catPrice').html(cat.price)
+    // Display Cats' Price (if it has one)
+    if (cat.price) $(`${idCat}`).find('#catPrice').html("FOR SALE: " + cat.price + " ETH")
 
     // Display Cats' status
-    $(`${idCat}`).find('#catStatus').html(cat.status)
+//    $(`${idCat}`).find('#catStatus').html("TEST")
 
   }
   catch (error){

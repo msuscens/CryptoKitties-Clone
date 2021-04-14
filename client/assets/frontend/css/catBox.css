@@ -18,12 +18,12 @@
 .priceDiv {
     position: absolute;
     left:40px;
-    top: 15px;
+    top: 35px;
 }
 .statusDiv {
     position: absolute;
-    left:40px;
-    top: 15px;
+    right:30px;
+    top: 35px;
 }
 
 .checkbox-xl .custom-control-label::before, 

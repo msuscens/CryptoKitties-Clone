@@ -10,9 +10,11 @@ $(document).ready(async function(){
     // await DisplayMarketplaceKitties()
     DisplayMarketplaceKitties()
 
-    // Register for event reporting
-    // *** TODO - Do it here ***
-    reportOnTransactionEvent(displayTransaction)
+    // Register for KittyContract transaction event reporting
+    reportOnTransactionEvent(processTransactionEvent)
+
+//    reportOnTransactionEvent(displayTransaction)
+    // reportOnTransactionEvent(removeSoldKitty)
 
 })
 
@@ -25,10 +27,40 @@ async function DisplayMarketplaceKitties(){
         putAllCatsOnPage(catsOnSale)
 
         marketplaceCatIds = catIds
-        // TODO : *** Also store full details ie. catsOnSale ??  
+        // TODO : *** Also store full details ie. catsOnSale ??
+
+        // Add buy button (to all cats in marketplace except users own)
+
+        for (i = 0; i < catsOnSale.length; i++) {
+            const cat = catsOnSale[i]
+        //     if (isUser(cat.sellerAddress)) { 
+        //         $(`#kitty${cat.id}`).find('#catStatus').html("YOUR KITTY!")
+        //     }
+        //     else {
+                $(`#kitty${cat.id}`).find('#catStatus').html(
+                    `<button id="buyButton${cat.id}" type="button" class="btn btn-success" onclick="buyKittyToken('${cat.id}', '${cat.priceInWei}')">BUY</button>`)
+            // }
+        }
     }
     catch(error){
         console.log("In DisplayMarketplaceKitties(): " + error)
+    }
+}
+
+
+function buyKittyToken(id, priceInWei){
+    try {
+        // Buy the selected kittie
+        console.log(`*** Buy kitty id = ${id} ***`)
+        // const priceInWei = web3.utils.toWei(price, "ether")
+        buyKitty(id, priceInWei)
+
+        // Prevent user clicking buy again whilst purchase is being procesed
+        $(`#buyButton${id}`).prop("disabled", true);
+
+    }
+    catch(error){
+        console.log("Error from buyKittyToken(id): " + error)
     }
 }
 

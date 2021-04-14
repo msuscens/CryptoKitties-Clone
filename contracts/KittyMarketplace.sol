@@ -40,19 +40,18 @@ contract KittyMarketplace is Ownable, IKittyMarketplace {
     /**
     * Get the details about a offer for _tokenId. Throws an error if there is no active offer for _tokenId.
      */
-    function getOffer(uint256 tokenId)
+    function getOffer(uint256 idOfToken)
         external
         view
-        returns(address, uint256, uint256, uint256, bool)
+        returns(address seller, uint256 price, uint256 index, uint256 tokenId, bool active)
     {
+        // *** QUESTION ????
         // If attempt to access non existance offer will throw an error!?
-        return (
-            _tokenIdToOffer[tokenId].seller,
-            _tokenIdToOffer[tokenId].price,
-            _tokenIdToOffer[tokenId].index,
-            _tokenIdToOffer[tokenId].tokenId,
-            _tokenIdToOffer[tokenId].active
-        );
+        seller = _tokenIdToOffer[idOfToken].seller;
+        price = _tokenIdToOffer[idOfToken].price;
+        index = _tokenIdToOffer[idOfToken].index;
+        tokenId = _tokenIdToOffer[idOfToken].tokenId;
+        active = _tokenIdToOffer[idOfToken].active;
     }
 
     /**
