@@ -45,7 +45,7 @@ function breeding(){
 }
 
 
-async function selling(){
+async function advertiseCat(){
     try {
         // Validate 1 cat is selected
         let catIds = getSelectedCatIds(myCatIds)
@@ -82,7 +82,7 @@ async function selling(){
 
     }
     catch(error){
-        console.log("Error from selling(): " + error)
+        console.log("Error from advertiseCat(): " + error)
         $("#sellError").text("Failed to set sale offer in the marketplace!")
     }
 }
