@@ -148,7 +148,7 @@ contract KittyMarketplace is Ownable, IKittyMarketplace {
         if (msg.value > 0) {
             // tokenOffer.seller.transfer(tokenOffer.price);
 
-            // *** Is this correct?? Review / test
+            // *** Q. Kenneth - Is this correct?? Review / test
             // This forwards all available gas. Be sure to check the return value!
             (bool success, ) = tokenOffer.seller.call.value(msg.value)("");
             require(success, "Payment to seller failed!");

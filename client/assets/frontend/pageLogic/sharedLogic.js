@@ -36,7 +36,7 @@ function getHtmlForKitty(id){
                 <span id="catStatus"></span>
             </div>
 
-            <div class="catCheckBox custom-control custom-checkbox checkbox-xl">
+            <div id="checkboxControl${id}" class="catCheckBox custom-control custom-checkbox checkbox-xl">
                 <input type="checkbox" class="custom-control-input" id="CheckBoxCat-${id}">
                 <label class="custom-control-label" for="CheckBoxCat-${id}"></label>
             </div>
@@ -165,18 +165,24 @@ function clearErrorMessage(idErrorElement) {
 }
 
 
-function putAllCatsOnPage(cats) {
+function putAllCatsOnPage(cats, withCheckBoxes=false) {
     for (let i = 0; i < cats.length; i++) {
         const catId = cats[i].id
         const htmlKitty = getHtmlForKitty(catId) 
         $('#rowOfCats').append(htmlKitty)
         render(cats[i], `#kitty${catId}`)
 
-        // Enable cat selection (toggle) on click
-        const catElement = document.getElementById(`kitty${catId}`) 
-        catElement.addEventListener("click", function(){
-            toggleCheckBox(`#CheckBoxCat-${catId}`)
-        }, false)
+        if (withCheckBoxes) {
+            // Enable cat selection (toggle) on click
+            const catElement = document.getElementById(`kitty${catId}`) 
+            catElement.addEventListener("click", function(){
+                toggleCheckBox(`#CheckBoxCat-${catId}`)
+            }, false)
+        }
+        else {
+            $(`#checkboxControl${catId}`).hide()
+        }
+
     }
 }
 
@@ -209,14 +215,24 @@ function processTransactionEvent(newTx){
                 // updateDisplayedKitty(newTx)
                 break
             case "Buy":
-                console.log("In processTransactionEvent(newTx): 'Buy'")
+                console.log("In processTransactionEvent(newTx): 'Buy'")    
                 displayTransaction(newTx)
-                removeDisplayedKitty(newTx)
+                // Show kittie is now sold on marketplace page
+                $(`#buyButton${newTx.tokenId}`).addClass("btn-danger");
+                $(`#buyButton${newTx.tokenId}`).removeClass("btn-success");
+                $(`#buyButton${newTx.tokenId}`).text("SOLD!")
                 break
             case "Remove offer":
                 console.log("In processTransactionEvent(newTx): 'Remove offer'")
                 displayTransaction(newTx)
-                removeDisplayedKitty(newTx)
+
+                // Show kittie has just been withdrawn from sale (on marketplace page)
+                $(`#buyButton${newTx.tokenId}`).prop("disabled", true);
+                $(`#buyButton${newTx.tokenId}`).addClass("btn-danger");
+                $(`#buyButton${newTx.tokenId}`).removeClass("btn-success");
+                $(`#buyButton${newTx.tokenId}`).text("WITHDRAWN FROM MARKET!")
+
+                // removeDisplayedKitty(newTx)
                 break
             default:
                 throw new Error("Unknown tx value: "+newTx.TxType)
@@ -239,7 +255,7 @@ function displayTransaction(newTx){
     }
 }
 
-
+/*
 function removeDisplayedKitty(newTx){
     try {
         console.log("In removeDisplayedKitty(newTx): **** To be implemented **** ")
@@ -248,3 +264,4 @@ function removeDisplayedKitty(newTx){
         console.log("Error from removeDisplayedKitty(newTx): " + error)
     }
 }
+*/

@@ -42,7 +42,7 @@ function render(cat, idCat=""){
     $(`${idCat}`).find('#catGenNum').html(cat.gen)
 
     // Display Cats' Price (if it has one)
-    if (cat.price) $(`${idCat}`).find('#catPrice').html("FOR SALE: " + cat.price + " ETH")
+    if (cat.price) $(`${idCat}`).find('#catPrice').html("PRICE: " + cat.price + " ETH")
 
     // Display Cats' status
 //    $(`${idCat}`).find('#catStatus').html("TEST")

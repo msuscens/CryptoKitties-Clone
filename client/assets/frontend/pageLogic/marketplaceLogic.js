@@ -13,9 +13,6 @@ $(document).ready(async function(){
     // Register for KittyContract transaction event reporting
     reportOnTransactionEvent(processTransactionEvent)
 
-//    reportOnTransactionEvent(displayTransaction)
-    // reportOnTransactionEvent(removeSoldKitty)
-
 })
 
 
@@ -30,9 +27,9 @@ async function DisplayMarketplaceKitties(){
         // TODO : *** Also store full details ie. catsOnSale ??
 
         // Add buy button (to all cats in marketplace except users own)
-
         for (i = 0; i < catsOnSale.length; i++) {
             const cat = catsOnSale[i]
+        // *** Commented out for initial testing purposes only - uncomment for full testing with different User accounts
         //     if (isUser(cat.sellerAddress)) { 
         //         $(`#kitty${cat.id}`).find('#catStatus').html("YOUR KITTY!")
         //     }
@@ -50,21 +47,18 @@ async function DisplayMarketplaceKitties(){
 
 function buyKittyToken(id, priceInWei){
     try {
-        // Buy the selected kittie
-        console.log(`*** Buy kitty id = ${id} ***`)
-        // const priceInWei = web3.utils.toWei(price, "ether")
+        // Buy the kitty (via the marketplace Contract)
         buyKitty(id, priceInWei)
 
         // Prevent user clicking buy again whilst purchase is being procesed
         $(`#buyButton${id}`).prop("disabled", true);
-
     }
     catch(error){
         console.log("Error from buyKittyToken(id): " + error)
     }
 }
 
-
+/*
 function buy(){
     try {
         // Validate 1 cat is selected
@@ -83,3 +77,4 @@ function buy(){
         console.log("Error from buy(): " + error)
     }
 }
+*/

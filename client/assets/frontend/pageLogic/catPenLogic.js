@@ -18,7 +18,7 @@ async function displayAllOwnedKities(){
     try {
         const catIds = await getAllYourCatIds()
         const cats = await getDetailsAllCats(catIds)
-        putAllCatsOnPage(cats)
+        putAllCatsOnPage(cats, true)
 
         myCatIds = catIds
         // TODO *** Save cat details (as well as myCatIds)??
