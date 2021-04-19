@@ -1,4 +1,4 @@
-pragma solidity ^0.5.0;
+pragma solidity 0.5.12;
 
 /*
  * Market place to trade kitties (should **in theory** be used for any ERC721 token)

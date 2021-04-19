@@ -4,9 +4,12 @@ $(document).ready(async function(){
     const connected = await initiateConnection()
     if (connected != true) console.log("Not connected to contract")
 
+    // Ensure KittyContract owner is only one that can access/use kitty factory
+    if (await isOwnerOfKittyContract()) showFactoryLink() 
+    else location.href = "index.html"
+
     getDefaultKittie()
     onBirthEvent(displayBirth)
-
 })
 
 

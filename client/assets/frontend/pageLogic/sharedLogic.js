@@ -218,3 +218,26 @@ function displayTransaction(newTx){
         console.log("Error from displayTransaction(): " + error)
     }
 }
+
+
+function showFactoryLink() {
+    try {
+        const factoryLink = document.getElementById('factoryNavLink')
+        factoryLink.removeAttribute("hidden")
+    }
+    catch (error) {
+        console.log("Error from showFactoryLink(): " + error)
+    }
+}
+
+
+function hideFactoryLink() {
+    try {
+        const factoryLink = document.getElementById('factoryNavLink')
+        factoryLink.setAttribute("hidden")
+    }
+    catch (error) {
+        console.log("Error from hideFactoryLink(): " + error)
+    }
+}
+

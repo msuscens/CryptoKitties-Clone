@@ -7,11 +7,13 @@ $(document).ready(async function(){
     const connected = await initiateConnection()
     if (connected != true) console.log("Not connected to contract")
 
-    // await DisplayMarketplaceKitties()
     displayMarketplaceKitties()
 
     // Register for marketplace transaction events (with event handler to update page)
     onMarketplaceEvent(updateMarketPage)
+
+    // Make Kitty-Factory only accessable to KittyContract owner
+    await isOwnerOfKittyContract() ? showFactoryLink() : hideFactoryLink()  
 })
 
 
@@ -96,24 +98,3 @@ function buyKittyToken(id, priceInWei){
         console.log("Error from buyKittyToken(id): " + error)
     }
 }
-
-/*
-function buy(){
-    try {
-        // Validate 1 cat is selected
-        let catIds = getSelectedCatIds(marketplaceCatIds)
-        if (!isNumberOfKitties(1, catIds.length, "buyError")) return
-
-        // Buy the selected kittie
-        // *** TODO: ADD BUY CODE HERE *****
-        console.log("TODO - *** Buy the selected kitty ***")
-
-        // Notify user that kittie has been bought
-        // ie. Make sure that sc event is handled correctly...
-
-    }
-    catch(error){
-        console.log("Error from buy(): " + error)
-    }
-}
-*/

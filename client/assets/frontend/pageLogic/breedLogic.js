@@ -20,6 +20,9 @@ $(document).ready(async function(){
 
     displayMumandDad(parents)
     onBirthEvent(displayBirth)
+
+    // Make Kitty-Factory only accessable to KittyContract owner
+    await isOwnerOfKittyContract() ? showFactoryLink() : hideFactoryLink()
 })
 
 
@@ -60,10 +63,7 @@ function swapCats(){
 
 async function breed(){
     try {
-        // *** Question: I assume I don't want to wait for anything that sets values in blockchain SC (otherwise it'll bock UI)! ???? 
-        // *** Discuss with Kenneth ***
         breedCats(parents.mum.id, parents.dad.id)
-        // await breedCats(parents.mum.id, parents.dad.id)
     }
     catch (error) {
         console.log("Error from breed(): " + error)

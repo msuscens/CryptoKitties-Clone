@@ -2,8 +2,8 @@
 const web3 = new Web3(Web3.givenProvider);
 // console.log(web3.version)
 
-const KITTY_CONTRACT_ADDRESS = "0x02e260B27fBC4e4A9A0A9e79E04b1c0138c34e65"
-const MARKETPLACE_ADDRESS = "0x933Ac90f693c32c4Ad6052bdeA826b24B7dB22b3"
+const KITTY_CONTRACT_ADDRESS = "0x67063dAE4042627040eEb997c17A7EAFCED2592F"
+const MARKETPLACE_ADDRESS = "0x1261f3C244169AbF93cA6303955FCc0AD2d96796"
 
 let Instance_Of_KittyContract
 let Instance_Of_Marketplace
@@ -49,7 +49,6 @@ function isUser(address) {
 
 function onBirthEvent(uiCallbackFunc) {
     Instance_Of_KittyContract.events.Birth().on('data', function(event){
-
         uiCallbackFunc(event.returnValues)
     })
     .on('error', function(error, receipt) {
@@ -61,6 +60,21 @@ function onBirthEvent(uiCallbackFunc) {
 
 
 // KittyContract Interface functions
+
+async function isOwnerOfKittyContract() {
+    try {
+        let isOwner; 
+        await Instance_Of_KittyContract.methods.getContractOwner().call({}, function(err, contractOwner){
+            if (err) throw "Error from getContractOwner().call(): " + err
+            isOwner = String(contractOwner).toLowerCase() === String(User).toLowerCase()
+        })
+        return isOwner
+    }
+    catch (error) {
+        console.log("In isOwnerOfKittyContract(): " + error)
+    }
+}
+
 
 async function getAllYourCatIds() {
     try {

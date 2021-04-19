@@ -2,17 +2,18 @@ let myCatIds = [];  // All the kitties (kitty ids) that a user owns
 
 // When page loads
 $(document).ready(async function(){
+
     // Connect website to user's metamask (to allow interaction with Kittie SC)
     const connected = await initiateConnection()
     if (connected != true) console.log("Not connected to contract")
 
-    // *** Question: I assume I don't want to wait for anything that sets values in blockchain SC (otherwise it'll bock UI)! ???? 
-    // *** Discuss with Kenneth ***
-    // await displayAllOwnedKities()
     displayAllOwnedKities()
 
     // Register for marketplace transaction events (with event handler to update page)
     onMarketplaceEvent(updateCatPenPage)
+
+    // Make Kitty-Factory only accessable to KittyContract owner
+    await isOwnerOfKittyContract() ? showFactoryLink() : hideFactoryLink()
 })
 
 
@@ -120,17 +121,11 @@ async function advertiseCat(){
         }
         
         // Ensure marketplace is set as an operator
-        // *** Question: I assume I don't want to wait for anything that sets values in blockchain SC (otherwise it'll bock UI)! ???? 
-        // *** Discuss with Kenneth ***
-        // await grantMarketplaceApproval()
         await setMarketplaceApproval()
 
         // Create a sell order in the marketplace
         const salePriceInWei = BigInt(web3.utils.toWei(salePrice, 'ether'))
         setForSale(catIds[0], salePriceInWei)
-        // *** Question: I assume I don't want to wait for anything that sets values in blockchain (otherwise it'll bock UI)! ???? 
-        // *** Discuss with Kenneth ***
-        // await setForSale(catIds[0], salePriceInWei)
     }
     catch(error){
         console.log("Error from advertiseCat(): " + error)

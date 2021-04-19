@@ -109,7 +109,7 @@ contract KittyMarketplace is Ownable, IKittyMarketplace {
         _offers.push(newOffer);
         _tokenIdToOffer[tokenId] = newOffer;
 
-        emit MarketTransaction("Create offer", owner, tokenId);
+        emit MarketTransaction("Create offer", msg.sender, tokenId);
     }
 
     /**

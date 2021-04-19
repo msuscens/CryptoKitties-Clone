@@ -138,7 +138,7 @@ const abi = {
     {
       "constant": true,
       "inputs": [],
-      "name": "owner",
+      "name": "getContractOwner",
       "outputs": [
         {
           "internalType": "address",
@@ -584,7 +584,7 @@ const abi = {
     {
       "constant": true,
       "inputs": [],
-      "name": "owner",
+      "name": "getContractOwner",
       "outputs": [
         {
           "internalType": "address",
