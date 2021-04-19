@@ -11,7 +11,9 @@ $(document).ready(async function(){
     DisplayMarketplaceKitties()
 
     // Register for KittyContract transaction event reporting
-    reportOnTransactionEvent(processTransactionEvent)
+    reportOnMarketplaceEvent(processMarketplaceEvent)
+    // onMarketEvent(marketPageMarketEventHandler)
+    // onMarketEvent(catPenPageMarketEventHandler)
 
 })
 

@@ -10,7 +10,9 @@ $(document).ready(async function(){
     // *** Discuss with Kenneth ***
     // await displayAllOwnedKities()
     displayAllOwnedKities()
-    reportOnTransactionEvent(displayTransaction)
+    reportOnMarketplaceEvent(processMarketplaceEvent)
+    // onMarketEvent(catPenPageMarketEventHandler)
+
 })
 
 
@@ -18,6 +20,17 @@ async function displayAllOwnedKities(){
     try {
         const catIds = await getAllYourCatIds()
         const cats = await getDetailsAllCats(catIds)
+
+        // Collect details of any cats that are on sale in the marketplace
+        // (sale details will be undefined if not on sale)
+        for (let i = 0; i < catIds.length; i++) {
+            const catOnSale = await isCatOnSale(catIds[i])
+            if (catOnSale) {
+                const forSaleDetails =  await getForSaleDetails(catIds[i])
+                cats[i] = {...cats[i], ...forSaleDetails}
+            }
+        }
+
         putAllCatsOnPage(cats, true)
 
         myCatIds = catIds
@@ -64,7 +77,7 @@ async function advertiseCat(){
         // *** Question: I assume I don't want to wait for anything that sets values in blockchain SC (otherwise it'll bock UI)! ???? 
         // *** Discuss with Kenneth ***
         // await grantMarketplaceApproval()
-        setMarketplaceApproval()
+        await setMarketplaceApproval()
 
         // Create a sell order in the marketplace
         const salePriceInWei = BigInt(web3.utils.toWei(salePrice, 'ether'))
@@ -74,10 +87,7 @@ async function advertiseCat(){
         // *** Discuss with Kenneth ***
         // await setForSale(catIds[0], salePriceInWei)
 
-        // *** TODO : Output user message with TxHash ?????
-        // *** Probably not as wait for event to confirm
-
-        // Update kitty (in kitty pen) with a for sale notice
+        // Immediately (before page refresh) Update kitty (in kitty pen) with a for sale notice (ad price)
         // *** TODO - Do this here or upon receiving event ??
 
     }
@@ -87,6 +97,7 @@ async function advertiseCat(){
     }
 }
 
+/*
 function buying(){
     try {
         // Go to the Market page
@@ -96,3 +107,4 @@ function buying(){
         console.log("Error from buying(): " + error)
     }
 }
+*/

@@ -64,7 +64,6 @@ function reportOnBirthEvent(uiCallbackFunc) {
 
 async function getAllYourCatIds() {
     try {
-        console.log("In getAllYourCatIds()")
         let catIds = []
         await Instance_Of_KittyContract.methods.getAllYourKittyIds().call({}, function(err, idsTokens){
             if (err) throw "Error from getAllYourKittyIds().call(): " + err
@@ -144,7 +143,7 @@ async function breedCats(mumId, dadId){
 
 // Marketplace Contract Events
 
-function reportOnTransactionEvent(uiCallbackFunc) {
+function reportOnMarketplaceEvent(uiCallbackFunc) {
     Instance_Of_Marketplace.events.MarketTransaction().on('data', function(event){
         uiCallbackFunc(event.returnValues)
     })
@@ -191,6 +190,24 @@ async function getDetailsOfAllCatsForSale(catIds) {
 }
 
 
+async function isCatOnSale(catId) {
+    try {
+        let isOnSale
+        await Instance_Of_Marketplace.methods.isTokenOnSale(catId).call({}, function(errMsg, onSale){
+            if (errMsg) throw new Error(errMsg)
+            // return onSale - doesn't work (show Kenneth)
+            isOnSale = onSale
+        })
+        return isOnSale
+    }
+    catch (error) {
+        console.log("Error from isCatOnSale(catId): " + error)
+        console.log("Defaulting to returning false ... continuing")
+        return false
+    }
+}
+
+
 async function getForSaleDetails(catId) {
     try {
         const forSaleDetails = {
@@ -200,31 +217,53 @@ async function getForSaleDetails(catId) {
             active: undefined,
             price: undefined
         }
-         
+
         await Instance_Of_Marketplace.methods.getOffer(catId).call({}, function(errMsg, offer){
-            if (errMsg) throw "Error from getOffer(catId).call(): " + errMsg
-            if (catId != offer.tokenId ) throw "Internal error - tokenId returned by getOffer(catId) doesn't match catId!?"
+                if (errMsg) throw new Error(errMsg)
+                if (catId != offer.tokenId ) throw new Error(`Internal error - tokenId (${offer.tokenId}) returned by getOffer(catId) doesn't match catId (${catId})!?`)
 
-            forSaleDetails.id = offer.tokenId
-            forSaleDetails.sellerAddress = offer.seller
-            forSaleDetails.priceInWei = offer.price
-            forSaleDetails.active = offer.active
+                forSaleDetails.id = offer.tokenId
+                forSaleDetails.sellerAddress = offer.seller
+                forSaleDetails.priceInWei = offer.price
+                forSaleDetails.active = offer.active
 
-            // Convert wei price to ether
-            forSaleDetails.price = web3.utils.fromWei(offer.price, 'ether')
+                // Convert wei price to ether
+                forSaleDetails.price = web3.utils.fromWei(offer.price, 'ether')
+            // }
+            // catch(err) {
+            //     console.log("Error from getOffer(catId).call({}: " + err)
+            //     console.log("Cleanup: About to return with 'undefined' sales details...")
+            //     forSaleDetails.id = undefined
+            //     forSaleDetails.sellerAddress = undefined
+            //     forSaleDetails.priceInWei = undefined
+            //     forSaleDetails.active = undefined
+            //     forSaleDetails.price = undefined
+
+                // return forSaleDetails 
+            // }
         })
-
+        // console.log(forSaleDetails)
         return forSaleDetails
     }
     catch (error) {
         console.log("Error from getForSaleDetails(catId): " + error)    
+
+        // console.log("Error from getForSaleDetails(catId): " + error)
+        // console.log("Cleanup: About to return with 'undefined' sales details...")
+        // return {
+        //     id: undefined,
+        //     sellerAddress: undefined,
+        //     priceInWei: undefined,
+        //     active: undefined,
+        //     price: undefined
+        // }   
     }
 }
 
 
 async function setMarketplaceApproval(){
     try {
-        const isMarketplaceAnOperator = await Instance_Of_KittyContract.methods.isApprovedForAll(user, MARKETPLACE_ADDRESS).call()
+        const isMarketplaceAnOperator = await Instance_Of_KittyContract.methods.isApprovedForAll(User, MARKETPLACE_ADDRESS).call()
 
         if (isMarketplaceAnOperator == false) {
             await Instance_Of_KittyContract.methods.setApprovalForAll(MARKETPLACE_ADDRESS, true).send({}, function(err, txHash){

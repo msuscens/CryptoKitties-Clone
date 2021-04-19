@@ -45,8 +45,8 @@ contract KittyMarketplace is Ownable, IKittyMarketplace {
         view
         returns(address seller, uint256 price, uint256 index, uint256 tokenId, bool active)
     {
-        // *** QUESTION ????
-        // If attempt to access non existance offer will throw an error!?
+        require(_tokenIdToOffer[idOfToken].seller != address(0), "Token not on offer!");
+
         seller = _tokenIdToOffer[idOfToken].seller;
         price = _tokenIdToOffer[idOfToken].price;
         index = _tokenIdToOffer[idOfToken].index;
@@ -156,6 +156,14 @@ contract KittyMarketplace is Ownable, IKittyMarketplace {
         _kittyContract.safeTransferFrom(tokenOffer.seller, msg.sender, tokenId);
 
         emit MarketTransaction("Buy", tokenOffer.seller, tokenId);
+    }
+
+
+    /*
+    ** Checks if given tokenId is on sale or not; returning true if it is, false if not.
+    */
+    function isTokenOnSale(uint256 tokenId) external view returns (bool) {
+        return (_isOnOffer(tokenId));
     }
 
 

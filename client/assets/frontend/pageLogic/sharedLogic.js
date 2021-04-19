@@ -206,27 +206,45 @@ function displayBirth(newborn) {
 }
 
 
-function processTransactionEvent(newTx){
+// *** TODO - Split into 2 functions: 1 for processing markplace events for the Kitty-pen page and the other for the the marketplace page.
+// *** Then have each page register for reports giving their own function name.
+// *** (Move each processing function to relevenat pageLogic js file)
+function processMarketplaceEvent(newTx){
     try {
         switch (newTx.TxType) {
             case "Create offer":
                 console.log("In processTransactionEvent(newTx): 'Create offer'")
                 displayTransaction(newTx)
-                // updateDisplayedKitty(newTx)
+
+                // Kitty-pen page: Indicate kitty that is now on sale
+                // *** TODO : Here! ***
+
+                // Marketplace page: Indicate kitty that is now on sale
+                // by updating page with new kittie for sale showing
+                // *** TODO : Here! ***
+
                 break
             case "Buy":
                 console.log("In processTransactionEvent(newTx): 'Buy'")    
                 displayTransaction(newTx)
-                // Show kittie is now sold on marketplace page
+                // Marketplace page: Indicate kitty that is now sold 
                 $(`#buyButton${newTx.tokenId}`).addClass("btn-danger");
                 $(`#buyButton${newTx.tokenId}`).removeClass("btn-success");
                 $(`#buyButton${newTx.tokenId}`).text("SOLD!")
+
+                // Kitty-pen page: If your kitty bought, indicate which one!
+                // *** TODO : Here! ***
+
                 break
             case "Remove offer":
                 console.log("In processTransactionEvent(newTx): 'Remove offer'")
                 displayTransaction(newTx)
 
-                // Show kittie has just been withdrawn from sale (on marketplace page)
+                // Kitty-pen page: Indicate kitty that's been withdrawn from sale
+                // *** TODO : Here! ***
+
+
+                // Marketplace page: Show kitty that has just been withdrawn from sale
                 $(`#buyButton${newTx.tokenId}`).prop("disabled", true);
                 $(`#buyButton${newTx.tokenId}`).addClass("btn-danger");
                 $(`#buyButton${newTx.tokenId}`).removeClass("btn-success");
