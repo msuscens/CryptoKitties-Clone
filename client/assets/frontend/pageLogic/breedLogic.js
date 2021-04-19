@@ -19,7 +19,7 @@ $(document).ready(async function(){
     if (connected != true) console.log("Not connected to contract")
 
     displayMumandDad(parents)
-    reportOnBirthEvent(displayBirth)
+    onBirthEvent(displayBirth)
 })
 
 

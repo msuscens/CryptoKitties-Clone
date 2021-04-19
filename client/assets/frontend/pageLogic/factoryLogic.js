@@ -5,7 +5,7 @@ $(document).ready(async function(){
     if (connected != true) console.log("Not connected to contract")
 
     getDefaultKittie()
-    reportOnBirthEvent(displayBirth)
+    onBirthEvent(displayBirth)
 
 })
 

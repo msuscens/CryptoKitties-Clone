@@ -8,17 +8,14 @@ $(document).ready(async function(){
     if (connected != true) console.log("Not connected to contract")
 
     // await DisplayMarketplaceKitties()
-    DisplayMarketplaceKitties()
+    displayMarketplaceKitties()
 
-    // Register for KittyContract transaction event reporting
-    reportOnMarketplaceEvent(processMarketplaceEvent)
-    // onMarketEvent(marketPageMarketEventHandler)
-    // onMarketEvent(catPenPageMarketEventHandler)
-
+    // Register for marketplace transaction events (with event handler to update page)
+    onMarketplaceEvent(updateMarketPage)
 })
 
 
-async function DisplayMarketplaceKitties(){
+async function displayMarketplaceKitties(){
     try {
         const catIds = await getAllCatIdsOnSale()
         const catsOnSale = await getDetailsOfAllCatsForSale(catIds)
@@ -31,18 +28,58 @@ async function DisplayMarketplaceKitties(){
         // Add buy button (to all cats in marketplace except users own)
         for (i = 0; i < catsOnSale.length; i++) {
             const cat = catsOnSale[i]
-        // *** Commented out for initial testing purposes only - uncomment for full testing with different User accounts
-        //     if (isUser(cat.sellerAddress)) { 
-        //         $(`#kitty${cat.id}`).find('#catStatus').html("YOUR KITTY!")
-        //     }
-        //     else {
+            // Add buy option for all kitties that are not yours already
+            if (isUser(cat.sellerAddress)) { 
+                $(`#kitty${cat.id}`).find('#catStatus').html("YOUR KITTY!")
+            }
+            else {
                 $(`#kitty${cat.id}`).find('#catStatus').html(
                     `<button id="buyButton${cat.id}" type="button" class="btn btn-success" onclick="buyKittyToken('${cat.id}', '${cat.priceInWei}')">BUY</button>`)
-            // }
+            }
         }
     }
     catch(error){
         console.log("In DisplayMarketplaceKitties(): " + error)
+    }
+}
+
+
+function updateMarketPage(newTx){
+    try {
+        switch (newTx.TxType) {
+            case "Create offer":
+                console.log("In updateMarketPage(newTx): 'Create offer'")
+                displayTransaction(newTx)
+
+                // *** TODO ***
+                // Indicate kitty that is now on sale by updating page with
+                // the new kitty for sale 
+                // *** TODO : Here! ***
+                break
+            case "Buy":
+                console.log("In updateMarketPage(newTx): 'Buy'")    
+                displayTransaction(newTx)
+                // Indicate kitty that is now sold 
+                $(`#buyButton${newTx.tokenId}`).addClass("btn-danger");
+                $(`#buyButton${newTx.tokenId}`).removeClass("btn-success");
+                $(`#buyButton${newTx.tokenId}`).text("SOLD!")
+                break
+            case "Remove offer":
+                console.log("In updateMarketPage(newTx): 'Remove offer'")
+                displayTransaction(newTx)
+
+                // Show kitty that has just been withdrawn from sale
+                $(`#buyButton${newTx.tokenId}`).prop("disabled", true);
+                $(`#buyButton${newTx.tokenId}`).addClass("btn-danger");
+                $(`#buyButton${newTx.tokenId}`).removeClass("btn-success");
+                $(`#buyButton${newTx.tokenId}`).text("WITHDRAWN FROM MARKET!")
+                break
+            default:
+                throw new Error("Unknown tx value: "+newTx.TxType)
+        }
+    }
+    catch (error) {
+        console.log("Error from updateMarketPage(newTx): " + error)
     }
 }
 

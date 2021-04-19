@@ -187,7 +187,7 @@ function putAllCatsOnPage(cats, withCheckBoxes=false) {
 }
 
 
-// Event Handlers - invoked by Smart Contract interface (upon a SC event)
+// Event Handler for birth event (i.e. upon a SC event)
 
 function displayBirth(newborn) {
     try {
@@ -206,60 +206,6 @@ function displayBirth(newborn) {
 }
 
 
-// *** TODO - Split into 2 functions: 1 for processing markplace events for the Kitty-pen page and the other for the the marketplace page.
-// *** Then have each page register for reports giving their own function name.
-// *** (Move each processing function to relevenat pageLogic js file)
-function processMarketplaceEvent(newTx){
-    try {
-        switch (newTx.TxType) {
-            case "Create offer":
-                console.log("In processTransactionEvent(newTx): 'Create offer'")
-                displayTransaction(newTx)
-
-                // Kitty-pen page: Indicate kitty that is now on sale
-                // *** TODO : Here! ***
-
-                // Marketplace page: Indicate kitty that is now on sale
-                // by updating page with new kittie for sale showing
-                // *** TODO : Here! ***
-
-                break
-            case "Buy":
-                console.log("In processTransactionEvent(newTx): 'Buy'")    
-                displayTransaction(newTx)
-                // Marketplace page: Indicate kitty that is now sold 
-                $(`#buyButton${newTx.tokenId}`).addClass("btn-danger");
-                $(`#buyButton${newTx.tokenId}`).removeClass("btn-success");
-                $(`#buyButton${newTx.tokenId}`).text("SOLD!")
-
-                // Kitty-pen page: If your kitty bought, indicate which one!
-                // *** TODO : Here! ***
-
-                break
-            case "Remove offer":
-                console.log("In processTransactionEvent(newTx): 'Remove offer'")
-                displayTransaction(newTx)
-
-                // Kitty-pen page: Indicate kitty that's been withdrawn from sale
-                // *** TODO : Here! ***
-
-
-                // Marketplace page: Show kitty that has just been withdrawn from sale
-                $(`#buyButton${newTx.tokenId}`).prop("disabled", true);
-                $(`#buyButton${newTx.tokenId}`).addClass("btn-danger");
-                $(`#buyButton${newTx.tokenId}`).removeClass("btn-success");
-                $(`#buyButton${newTx.tokenId}`).text("WITHDRAWN FROM MARKET!")
-
-                // removeDisplayedKitty(newTx)
-                break
-            default:
-                throw new Error("Unknown tx value: "+newTx.TxType)
-        }
-    }
-    catch (error) {
-        console.log("Error from processTransactionEvent(newTx): " + error)
-    }
-}
 
 
 function displayTransaction(newTx){
@@ -272,14 +218,3 @@ function displayTransaction(newTx){
         console.log("Error from displayTransaction(): " + error)
     }
 }
-
-/*
-function removeDisplayedKitty(newTx){
-    try {
-        console.log("In removeDisplayedKitty(newTx): **** To be implemented **** ")
-    }
-    catch (error) {
-        console.log("Error from removeDisplayedKitty(newTx): " + error)
-    }
-}
-*/

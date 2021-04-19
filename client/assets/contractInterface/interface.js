@@ -47,7 +47,7 @@ function isUser(address) {
 
 // KittyContract Events
 
-function reportOnBirthEvent(uiCallbackFunc) {
+function onBirthEvent(uiCallbackFunc) {
     Instance_Of_KittyContract.events.Birth().on('data', function(event){
 
         uiCallbackFunc(event.returnValues)
@@ -143,7 +143,7 @@ async function breedCats(mumId, dadId){
 
 // Marketplace Contract Events
 
-function reportOnMarketplaceEvent(uiCallbackFunc) {
+function onMarketplaceEvent(uiCallbackFunc) {
     Instance_Of_Marketplace.events.MarketTransaction().on('data', function(event){
         uiCallbackFunc(event.returnValues)
     })

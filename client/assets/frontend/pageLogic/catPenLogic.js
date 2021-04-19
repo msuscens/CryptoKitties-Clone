@@ -10,9 +10,9 @@ $(document).ready(async function(){
     // *** Discuss with Kenneth ***
     // await displayAllOwnedKities()
     displayAllOwnedKities()
-    reportOnMarketplaceEvent(processMarketplaceEvent)
-    // onMarketEvent(catPenPageMarketEventHandler)
 
+    // Register for marketplace transaction events (with event handler to update page)
+    onMarketplaceEvent(updateCatPenPage)
 })
 
 
@@ -42,6 +42,44 @@ async function displayAllOwnedKities(){
 }
 
 
+function updateCatPenPage(newTx){
+    try {
+        switch (newTx.TxType) {
+            case "Create offer":
+                console.log("In updateCatPenPage(newTx): 'Create offer'")
+                displayTransaction(newTx)
+
+                // Add price to kitty that is now on sale
+                setTimeout(()=>{location.reload(true)},1.5*1000)
+                break
+            case "Buy":
+                console.log("In updateCatPenPage(newTx): 'Buy'")    
+                displayTransaction(newTx)
+
+                // (Possibly) indicate which kitty has been bought! ???
+                // *** TODO ???: Here! ***
+
+                // Remove sold kitty from the pen
+                setTimeout(()=>{location.reload(true)},2*1000)
+
+                break
+            case "Remove offer":
+                console.log("In updateCatPenPage(newTx): 'Remove offer'")
+                displayTransaction(newTx)
+
+                // Remove price from kitty that's been withdrawn from sale
+                setTimeout(()=>{location.reload(true)},1.5*1000)
+                break
+            default:
+                throw new Error("Unknown tx value: "+newTx.TxType)
+        }
+    }
+    catch (error) {
+        console.log("Error from updateCatPenPage(newTx): " + error)
+    }
+}
+
+
 function breeding(){
     try {
         // Validate 2 cats are selected
@@ -64,13 +102,21 @@ async function advertiseCat(){
         let catIds = getSelectedCatIds(myCatIds)
         if (!isNumberOfKitties(1, catIds.length, "sellError")) return
 
+        // Validate not already advertised for sale
+        const catOnSale = await isCatOnSale(catIds[0])
+        if (catOnSale) {
+            $("#sellError").text("Kitty is already for sale! To relist at diferent price, please first withdraw current advertisement!")
+            $("#sellError").css({'color': 'red', 'font-weight': 'bold'})
+            return
+        }
+
         // Validate user entered sale price
         const salePrice = $("#salePrice").val()
         const salePriceFigure = parseFloat(salePrice)
         if (!Number.isFinite(salePriceFigure) && (salePriceFigure > 0)) {
             $("#sellError").text("Invalid price! Please enter a positive number!")
             $("#sellError").css({'color': 'red', 'font-weight': 'bold'})
-            return false
+            return
         }
         
         // Ensure marketplace is set as an operator
@@ -81,19 +127,14 @@ async function advertiseCat(){
 
         // Create a sell order in the marketplace
         const salePriceInWei = BigInt(web3.utils.toWei(salePrice, 'ether'))
-
         setForSale(catIds[0], salePriceInWei)
         // *** Question: I assume I don't want to wait for anything that sets values in blockchain (otherwise it'll bock UI)! ???? 
         // *** Discuss with Kenneth ***
         // await setForSale(catIds[0], salePriceInWei)
-
-        // Immediately (before page refresh) Update kitty (in kitty pen) with a for sale notice (ad price)
-        // *** TODO - Do this here or upon receiving event ??
-
     }
     catch(error){
         console.log("Error from advertiseCat(): " + error)
-        $("#sellError").text("Failed to set sale offer in the marketplace!")
+        $("#sellError").text("Failed to create marketplace 'for sale' advertisement!")
     }
 }
 
@@ -107,7 +148,8 @@ async function removeAdvert() {
         // Validate selected cat is currently up for sale
         const catOnSale = await isCatOnSale(catIds[0])
         if (!catOnSale) {
-            console.log("Kittie not for sale so no marketplace 'for sale' advert to remove!")
+            $("#sellError").text("There's no 'for sale' advertisement to remove for this kitty!")
+            $("#sellError").css({'color': 'red', 'font-weight': 'bold'})
             return
         }
 
@@ -116,7 +158,6 @@ async function removeAdvert() {
     }
     catch (error) {
         console.log("Error from removeAdvert(): " + error)
-        $("#sellError").text("Failed to remove 'for sale' advert from the marketplace!")
-
+        $("#sellError").text("Failed to remove 'for sale' advertisement from the marketplace!")
     }
 }
