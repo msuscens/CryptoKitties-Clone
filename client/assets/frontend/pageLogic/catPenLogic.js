@@ -97,14 +97,26 @@ async function advertiseCat(){
     }
 }
 
-/*
-function buying(){
+
+async function removeAdvert() {
     try {
-        // Go to the Market page
-        window.location.href = `marketplace.html`
+        // Validate 1 cat is selected
+        let catIds = getSelectedCatIds(myCatIds)
+        if (!isNumberOfKitties(1, catIds.length, "sellError")) return 
+        
+        // Validate selected cat is currently up for sale
+        const catOnSale = await isCatOnSale(catIds[0])
+        if (!catOnSale) {
+            console.log("Kittie not for sale so no marketplace 'for sale' advert to remove!")
+            return
+        }
+
+        // Remove the cat from sale (in the marketplace)
+        withdrawFromSale(catIds[0])
     }
-    catch(error){
-        console.log("Error from buying(): " + error)
+    catch (error) {
+        console.log("Error from removeAdvert(): " + error)
+        $("#sellError").text("Failed to remove 'for sale' advert from the marketplace!")
+
     }
 }
-*/

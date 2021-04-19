@@ -229,34 +229,11 @@ async function getForSaleDetails(catId) {
 
                 // Convert wei price to ether
                 forSaleDetails.price = web3.utils.fromWei(offer.price, 'ether')
-            // }
-            // catch(err) {
-            //     console.log("Error from getOffer(catId).call({}: " + err)
-            //     console.log("Cleanup: About to return with 'undefined' sales details...")
-            //     forSaleDetails.id = undefined
-            //     forSaleDetails.sellerAddress = undefined
-            //     forSaleDetails.priceInWei = undefined
-            //     forSaleDetails.active = undefined
-            //     forSaleDetails.price = undefined
-
-                // return forSaleDetails 
-            // }
         })
-        // console.log(forSaleDetails)
         return forSaleDetails
     }
     catch (error) {
         console.log("Error from getForSaleDetails(catId): " + error)    
-
-        // console.log("Error from getForSaleDetails(catId): " + error)
-        // console.log("Cleanup: About to return with 'undefined' sales details...")
-        // return {
-        //     id: undefined,
-        //     sellerAddress: undefined,
-        //     priceInWei: undefined,
-        //     active: undefined,
-        //     price: undefined
-        // }   
     }
 }
 
@@ -271,13 +248,14 @@ async function setMarketplaceApproval(){
                 else console.log(txHash)
             })
 
-/* Filips code - investiage what he's doing here with .on('receipt' ... can't see code beyond that point, is there an extra parameter??
+/* *** Question for Kenneth:
+/* Filips code - what he's doing here (vs method I use above) with .on('receipt' ... can't see code beyond that point, is there an extra parameter??
             await Instance_Of_KittyContract.methods.setApprovalForAll(MARKETPLACE_ADDRESS, true).send().on('receipt', function(receipt) {
                 // tx done
                 console.log("tx done");
                 getInventorty()
             })
-*/
+*** */
         }
     }
     catch (err) {
@@ -305,9 +283,25 @@ async function setForSale(catId, salePriceInWei) {
 }
 
 
+async function withdrawFromSale(catId) {
+    try {
+        await Instance_Of_Marketplace.methods.removeOffer(catId).send({}, function(err, txHash){
+            if (err) {
+                throw(err)
+            }
+            else {
+                console.log(txHash)
+            }
+        })
+    }
+    catch (err) {
+        console.log("Error from withdrawFromSale(catId): " + err)
+    }
+}
+
+
 async function buyKitty(tokenId, priceInWei) {
     try {
-        // const amount = web3.utils.toWei(price, "ether")
         await Instance_Of_Marketplace.methods.buyKitty(tokenId).send({value: priceInWei}, function(err, txHash){
             if (err) {
                 throw(err)
