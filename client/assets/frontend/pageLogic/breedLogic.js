@@ -21,7 +21,7 @@ $(document).ready(async function(){
     displayMumandDad(parents)
     onBirthEvent(displayBirth)
 
-    // Make Kitty-Factory only accessable to KittyContract owner
+    // Make Kitty-Factory accessable only to KittyContract owner
     await isOwnerOfKittyContract() ? showFactoryLink() : hideFactoryLink()
 })
 

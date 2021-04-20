@@ -45,7 +45,7 @@
     <div class="container p-1" style="margin-top: 2vh;margin-bottom: 6vh;">
         <div align="center">
           <h1 class="c-white">My Kitty-Pen</h1>
-          <p class="c-white">(The Kitties that you own)</p>
+          <p class="c-white">Kitties that you own</p>
         </div>
         <div class="row">
           <div class="col-lg-4 mt-1 ml-1">
@@ -61,19 +61,18 @@
           <div class="col mt-1 ml-1">
             <form>
               <div class="form-group row ml-1">
-                <div class="col-lg-5">
-                  <label for="salePrice" class="col-form-label">Price (ETH)</label>
+                <div class="col-lg-4">
+                  <label for="salePrice" class="col-form-label">Price(ETH)</label>
                 </div>
-                <div class="col-lg-3">
-                  <input id="salePrice" type="text" class="form-control"
-                     aria-describedby="sellHelp" value="2.5" placeholder="ETH">
+                <div class="col-lg-4">
+                  <input id="salePrice" type="text" class="form-control" value="2.5">
                 </div>
 
-                <div class="col-lg-3">
+                <div class="col-lg-4">
                   <button type="button" class="btn btn-success mr-1"
-                    onclick="advertiseCat()">Advertise</button>
+                    onclick="advertiseCat()" aria-describedby="advertiseHelp">Advertise</button>
                 </div>
-                <small id="sellHelp" class="form-text">Select a kitty, enter a sale price, click 'Advertise'<br>(to list for sale in the marketplace)</small>
+                <small id="advertiseHelp" class="form-text">Select a kitty, enter a sale price, click 'Advertise'<br>(to place a for sale ad in the marketplace)</small>
                 <p id="sellError"></p>
               </div>
             </form>
@@ -83,9 +82,9 @@
             <form>
               <div class="form-group row ml-1">
                 <button type="button" class="btn btn-success mr-1" onclick="removeAdvert()" 
-                    aria-describedby="buyHelp">Withdraw Advertisement</button>
+                    aria-describedby="buyHelp">Withdraw Ad</button>
               </div>
-              <small id="buyHelp" class="form-text">Select kitty, click 'Withdraw Advert'<br>(to delist from sale in the marketplace)</small>
+              <small id="buyHelp" class="form-text">Select kitty, click 'Withdraw Ad'<br>(to remove advert in the marketplace)</small>
               <p id="buyError"></p>
             </form>
           </div>

@@ -9,10 +9,10 @@ $(document).ready(async function(){
 
     displayAllOwnedKities()
 
-    // Register for marketplace transaction events (with event handler to update page)
+    // Register for marketplace transaction events
     onMarketplaceEvent(updateCatPenPage)
 
-    // Make Kitty-Factory only accessable to KittyContract owner
+    // Make Kitty-Factory accessable only to KittyContract owner
     await isOwnerOfKittyContract() ? showFactoryLink() : hideFactoryLink()
 })
 
@@ -22,8 +22,7 @@ async function displayAllOwnedKities(){
         const catIds = await getAllYourCatIds()
         const cats = await getDetailsAllCats(catIds)
 
-        // Collect details of any cats that are on sale in the marketplace
-        // (sale details will be undefined if not on sale)
+        // Collect offer details of kitties on sale in the marketplace
         for (let i = 0; i < catIds.length; i++) {
             const catOnSale = await isCatOnSale(catIds[i])
             if (catOnSale) {
@@ -35,7 +34,6 @@ async function displayAllOwnedKities(){
         putAllCatsOnPage(cats, true)
 
         myCatIds = catIds
-        // TODO *** Save cat details (as well as myCatIds)??
     }
     catch(error){
         console.log("In displayAllOwnedKities(): " + error)

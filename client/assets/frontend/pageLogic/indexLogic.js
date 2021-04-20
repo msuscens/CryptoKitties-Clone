@@ -6,6 +6,6 @@ $(document).ready(async function() {
     const connected = await initiateConnection()
     if (connected != true) console.log("Not connected to contract")
 
-    // Make Kitty-Factory only accessable to KittyContract owner
+    // Make Kitty-Factory accessable only to KittyContract owner
     await isOwnerOfKittyContract() ? showFactoryLink() : hideFactoryLink()  
 })

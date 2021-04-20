@@ -13,8 +13,8 @@ async function initiateConnection(){
     try {
         // Prompt user to allow our website to use their metamask account to interact with the blockchain
         // window.ethereum.enable().then(function(accounts){
-        //     instance = new web3.eth.Contract(abi, contractAddress, {from: accounts[0]})
-        //     user = accounts[0]
+        //     instance = new web3.eth.Contract(abi.kittyContract, KITTY_CONTRACT_ADDRESS, {from: accounts[0]})
+        //     User = accounts[0]
         // })
 
         let accounts = await window.ethereum.enable()
@@ -120,7 +120,6 @@ async function getCatDetails(catId) {
 
         await Instance_Of_KittyContract.methods.getKitty(catId).call({}, function(errMsg, kitty){
             if (errMsg) throw "Error from getKitty(catId).call(): " + errMsg
-            // cat.dna = getKittyDna(kitty.genes)
             cat.genes = kitty.genes
             cat.birthTime = kitty.birthTime
             cat.mumId = kitty.mumId
@@ -209,7 +208,6 @@ async function isCatOnSale(catId) {
         let isOnSale
         await Instance_Of_Marketplace.methods.isTokenOnSale(catId).call({}, function(errMsg, onSale){
             if (errMsg) throw new Error(errMsg)
-            // return onSale - doesn't work (show Kenneth)
             isOnSale = onSale
         })
         return isOnSale
@@ -287,7 +285,6 @@ async function setForSale(catId, salePriceInWei) {
             }
             else {
                 console.log(txHash)
-                // return txHash;
             }
         })
     }
@@ -322,7 +319,6 @@ async function buyKitty(tokenId, priceInWei) {
             }
             else {
                 console.log(txHash)
-                // return txHash;
             }
         })
     }
